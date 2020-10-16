@@ -1,0 +1,15 @@
+a {
+    transition: .2s all ease-in-out;
+}
+
+.tab-link{
+    color: #B9B9B9;
+}
+
+.tab-link a { 
+    color: inherit;
+}
+
+form {
+    width: 100%;
+}
