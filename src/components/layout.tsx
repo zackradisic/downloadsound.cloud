@@ -28,8 +28,8 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || 'Title'} />
-      <main>{children}</main>
+      <Header />
+      {children}
       <Footer />
     </>
   )
