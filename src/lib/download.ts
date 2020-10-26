@@ -13,24 +13,26 @@ interface DownloadedTrack {
 }
 
 export const downloadFile = async (link: string, filename: string) => {
-  if (link.includes('/progressive')) {
-    fetch(link)
-      .then(resp => resp.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.style.display = 'none'
-        a.href = url
-        // the filename you want
-        a.download = filename + '.mp3'
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-      })
-      .catch(err => console.log(err))
-  } else {
-    const output = await downloadM3U8(link)
-    FileSaver.saveAs(output.blob, filename)
+  if (typeof window !== 'undefined') {
+    if (link.includes('/progressive')) {
+      fetch(link)
+        .then(resp => resp.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.style.display = 'none'
+          a.href = url
+          // the filename you want
+          a.download = filename + '.mp3'
+          document.body.appendChild(a)
+          a.click()
+          window.URL.revokeObjectURL(url)
+        })
+        .catch(err => console.log(err))
+    } else {
+      const output = await downloadM3U8(link)
+      FileSaver.saveAs(output.blob, filename)
+    }
   }
 }
 

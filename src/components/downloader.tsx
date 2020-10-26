@@ -7,9 +7,17 @@ import Image from 'react-bulma-components/lib/components/image'
 
 import scdl from 'soundcloud-downloader'
 import { getPlaylistLinks, getTrackLink, Playlist, Track } from '../api'
-import { downloadFile, downloadPlaylist } from '../lib/download'
 
 import BeatLoader from 'react-spinners/BeatLoader'
+
+import { useQueryParam, StringParam } from 'use-query-params'
+let downloadFile
+let downloadPlaylist
+if (typeof window !== 'undefined') {
+  const downloadStuff = require('../lib/download')
+  downloadFile = downloadStuff.downloadFile
+  downloadPlaylist = downloadStuff.downloadPlaylist
+}
 
 export enum DownloadTypes {
     Track = 'track',
@@ -17,7 +25,7 @@ export enum DownloadTypes {
 }
 
 interface DownloaderProps {
-    activeTab: DownloadTypes
+    activeTab: DownloadTypes,
 }
 
 interface DownloaderTabsProps {
@@ -42,13 +50,12 @@ interface DownloaderMediaInfoProps<T extends Track | Playlist> {
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
   const tabs = Object.keys(DownloadTypes).map(key => {
-    console.log(DownloadTypes[key], activeTab)
-    return <Columns.Column className="has-text-left tab-link" key={`tab-${key}`} style={{ color: DownloadTypes[key] === activeTab ? '#FF7700' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
+    return <Columns.Column className="has-text-left tab-link" key={`tab-${key}`} style={{ fontWeight: DownloadTypes[key] === activeTab ? 600 : 400, color: DownloadTypes[key] === activeTab ? '#FF7700' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
       <Link to={`/${DownloadTypes[key]}`}>{DownloadTypes[key].toUpperCase()}</Link>
     </Columns.Column>
   })
   return (
-    <Columns>
+    <Columns className="is-mobile">
       {tabs}
     </Columns>
   )
@@ -60,17 +67,13 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
     if (activeTab === DownloadTypes.Track) {
       return scdl.isValidUrl(text) && !text.includes('/sets/')
     } else {
-      console.log(text)
-      console.log(scdl.isValidUrl(text))
       return scdl.isValidUrl(text) && text.includes('/sets/')
     }
   }
 
   const onPaste = (e) => {
-    console.log('onPaste')
     e.preventDefault()
     const val = e.clipboardData.getData('Text')
-    console.log(val)
     setText(val)
 
     if (valid(val)) {
@@ -82,7 +85,6 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
 
   const onChange = (e) => {
     e.preventDefault()
-    console.log('onChange')
     const val = e.target.value
     setText(e.target.value)
 
@@ -94,10 +96,6 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   }
 
   const submitWrapper = async () => {
-    if (!scdl.isValidUrl(text)) {
-      alert('Invalid URL: ' + text)
-    }
-
     submit(text)
   }
   return (
@@ -120,11 +118,9 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
 
 const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media }: DownloaderMediaInfoProps<T>) => {
   const isTrack = !!(media as Playlist).tracks
-  console.log(media.author)
 
   const onClick = () => {
     if (downloading) return
-    console.log(dlFunc)
     dlFunc.dlFunc()
   }
   return (
@@ -146,58 +142,118 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
 interface dlFunc {
   dlFunc: Function
 }
+
 const Downloader = ({ activeTab }: DownloaderProps) => {
-  const [text, setText] = useState<string>('')
+  const [url, _] = useQueryParam('url', StringParam)
+  const [text, setText] = useState<string>(url)
   const [loading, setLoading] = useState<boolean>(false)
   const [downloaded, setDownloaded] = useState<boolean>(false)
   const [media, setMedia] = useState<Track | Playlist>()
   const [download, setDownload] = useState<dlFunc>()
   const [downloading, setDownloading] = useState<boolean>(false)
+  const [err, setErr] = useState<string>('')
 
   const submit = async (text: string) => {
     if (loading || downloaded) return
+    if (!scdl.isValidUrl(text)) {
+      setErr('That URL is invalid, please try another one.')
+      return
+    }
+    if (!text.includes('/sets/') && activeTab === DownloadTypes.Playlist) {
+      setErr('That is not a playlist URL.')
+      return
+    }
     if (activeTab === DownloadTypes.Track) {
       setLoading(true)
-      const { url, title, author, imageURL } = await getTrackLink(text)
-      setMedia({ url, title, author, imageURL } as Track)
-      const dlFunc = async () => {
-        console.log('FUCK')
-        setDownloading(true)
-        await downloadFile(url, title)
-        setDownloaded(true)
-        setDownloading(false)
+      try {
+        const { url, title, author, imageURL } = await getTrackLink(text)
+        setMedia({ url, title, author, imageURL } as Track)
+
+        const dlFunc = async () => {
+          try {
+            setDownloading(true)
+            await downloadFile(url, title)
+          } catch (err) {
+            setErr('Failed to download, try refreshing the page.')
+          }
+          setDownloaded(true)
+          setDownloading(false)
+        }
+
+        setLoading(false)
+        setDownload({ dlFunc })
+      } catch (err) {
+        if (err.response) {
+          switch (err.response.status) {
+          case 408:
+            setErr('Request timedout, please try again.')
+            break
+          case 422:
+            setErr('URL is invalid')
+            break
+          default:
+            setErr('An internal server error occured, please try again.')
+            break
+          }
+        } else {
+          setErr('An unknown error occured, please try again.')
+        }
+        setLoading(false)
       }
-      setLoading(false)
-      setDownload({ dlFunc })
     } else {
       setLoading(true)
-      const { url, title, tracks, author, imageURL } = await getPlaylistLinks(text)
-      setMedia({ url, title, tracks, author, imageURL } as Playlist)
-      const dlFunc = async () => {
-        setDownloading(true)
-        await downloadPlaylist(title, tracks)
-        setDownloaded(true)
-        setDownloading(false)
+      try {
+        const { url, title, tracks, author, imageURL } = await getPlaylistLinks(text)
+        setMedia({ url, title, tracks, author, imageURL } as Playlist)
+        const dlFunc = async () => {
+          setDownloading(true)
+          try {
+            await downloadPlaylist(title, tracks)
+          } catch (err) {
+            setErr('Failed to download, try refreshing the page.')
+          }
+          setDownloaded(true)
+          setDownloading(false)
+        }
+        setLoading(false)
+        setDownload({ dlFunc })
+      } catch (err) {
+        switch (err.response.status) {
+        case 408:
+          setErr('Request timedout, please try again.')
+          break
+        case 422:
+          setErr('URL is invalid')
+          break
+        case 403:
+          setErr('That playlist has too many tracks (maximum is 100)')
+          break
+        default:
+          setErr('An internal server error occured, please try again.')
+          break
+        }
+        setLoading(false)
       }
-      setLoading(false)
-      setDownload({ dlFunc })
     }
   }
   return (
-    <Columns>
-      <Columns.Column size={12}>
-        <DownloaderTabs activeTab={activeTab}/>
-      </Columns.Column>
+    <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+      <Columns>
+        <Columns.Column size={12}>
+          <DownloaderTabs activeTab={activeTab}/>
+        </Columns.Column>
 
-      <Columns.Column size={12}>
-        <DownloaderInputBar hasMedia={!!media} hasDownloaded={downloaded} isLoading={loading} activeTab={activeTab} submit={submit} text={text} setText={setText} />
-      </Columns.Column>
+        <Columns.Column size={12}>
+          <DownloaderInputBar hasMedia={!!media} hasDownloaded={downloaded} isLoading={loading} activeTab={activeTab} submit={submit} text={text} setText={setText} />
+        </Columns.Column>
 
-      <Columns.Column size={12}>
+        {media ? '' : <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p></Columns.Column>}
 
-        {media ? <DownloaderMediaInfo downloading={downloading} dlFunc={download} media={media} /> : ''}
-      </Columns.Column>
-    </Columns>
+        {media ? <Columns.Column size={12}><DownloaderMediaInfo downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
+
+        {media ? <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p> </Columns.Column> : ''}
+      </Columns>
+    </div>
   )
 }
 

@@ -22,3 +22,24 @@ figure > img {
 .column.media-info {
     height: 100%;
 }
+
+input { 
+    transition: .2s all ease-in-out;
+}
+
+a {
+    transition: .2s all ease-in-out;
+}
+
+.site-title {
+    color: inherit;
+}
+
+.site-title:hover {
+    color: #683100;
+}
+
+b {
+    color: #4B4B4B;
+}
+

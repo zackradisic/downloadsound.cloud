@@ -5,6 +5,7 @@ module.exports = {
     author: '@zackradisic'
   },
   plugins: [
+    'gatsby-plugin-use-query-params',
     {
       resolve: 'gatsby-plugin-sass',
       options: {

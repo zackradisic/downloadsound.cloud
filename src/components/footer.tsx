@@ -6,8 +6,8 @@ import Container from 'react-bulma-components/lib/components/container'
 import { Link } from 'gatsby'
 
 const Footer = () => {
-  const links = ['FAQ', 'ABOUT', 'CONTACT', 'PRIVACY POLICY'].map(link => <Columns.Column key={`link-${link}`}>
-    <Link to={link.toLowerCase()}>{link}</Link>
+  const links = ['ABOUT', 'CONTACT', 'PRIVACY POLICY'].map(link => <Columns.Column key={`link-${link}`}>
+    <Link to={'/' + link.toLowerCase().replace(' ', '-')}>{link}</Link>
   </Columns.Column>)
   return (
     <Section>

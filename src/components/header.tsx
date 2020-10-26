@@ -13,7 +13,9 @@ const Header = () => {
       <Hero.Body>
         <Container className="has-text-centered">
           <Heading style={{ letterSpacing: '0.225em', color: '#000000', paddingBottom: '3.25rem', paddingTop: '3rem' }}>
-            downloadsound.cloud
+            <Link className="site-title" to="/">
+              downloadsound.cloud
+            </Link>
           </Heading>
 
           <Heading subtitle size={5} renderAs="h2">

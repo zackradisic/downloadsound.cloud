@@ -1,9 +1,9 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "downloadsound.cloud",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "description": "Download soundcloud audio",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "https://github.com/zackradisic/",
   "dependencies": {
     "bluebird": "^3.7.2",
     "crunker": "^0.2.0",
@@ -16,6 +16,7 @@
     "gatsby-plugin-sass": "^2.3.16",
     "gatsby-plugin-sharp": "^2.6.38",
     "gatsby-plugin-typescript": "^2.4.21",
+    "gatsby-plugin-use-query-params": "^1.0.1",
     "gatsby-source-filesystem": "^2.3.32",
     "gatsby-transformer-sharp": "^2.5.16",
     "hls.js": "^0.14.16",
@@ -29,7 +30,8 @@
     "react-helmet": "^6.1.0",
     "react-spinners": "^0.9.0",
     "soundcloud-downloader": "^0.1.6",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "use-query-params": "^1.1.8"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.32",
@@ -60,11 +62,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gatsbyjs/gatsby-starter-default.git"
+    "url": "https://github.com/zackradisic/downloadsound.cloud"
   },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
-  },
-  "homepage": "https://github.com/gatsbyjs/gatsby-starter-default#readme",
   "main": ".eslintrc.js"
 }
