@@ -34,7 +34,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
     <Layout>
       <SEO
         title={title}
-        description={description} />
+        description={description}/>
       <Section style={{ backgroundColor: '#F8F8F8' }}>
         <Container>
           <Columns>
