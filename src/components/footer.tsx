@@ -16,7 +16,7 @@ const Footer = () => {
           {links}
 
           <Columns.Column>
-          © {new Date().getFullYear()} by @zackradisic
+          © {new Date().getFullYear()} by <a href="https://github.com/zackradisic">@zackradisic</a>
           </Columns.Column>
 
         </Columns>
