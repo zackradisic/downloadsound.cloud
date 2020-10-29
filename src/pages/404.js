@@ -2,12 +2,18 @@ import React from 'react'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
+import Section from 'react-bulma-components/lib/components/section'
+import Container from 'react-bulma-components/lib/components/container'
 
 const NotFoundPage = () => (
   <Layout>
     <SEO title="404: Not found" />
-    <h1>404: Not Found</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
+    <Section style={{ backgroundColor: '#F8F8F8' }}>
+      <Container>
+        <h1>404: Not Found</h1>
+        <p>Sorry, we could not find that page.</p>
+      </Container>
+    </Section>
   </Layout>
 )
 
