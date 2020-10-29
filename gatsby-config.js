@@ -1,10 +1,11 @@
 module.exports = {
   siteMetadata: {
-    title: 'Download Soundcloud',
+    title: 'downloadsound.cloud',
     description: 'Download tracks, songs, and playlists from soundcloud.com',
     author: '@zackradisic'
   },
   plugins: [
+    'gatsby-plugin-sitemap',
     'gatsby-plugin-use-query-params',
     {
       resolve: 'gatsby-plugin-sass',
