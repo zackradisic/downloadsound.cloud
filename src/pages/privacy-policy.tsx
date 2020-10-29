@@ -12,7 +12,7 @@ import './style.alt.css'
 const PrivacyPolicy = () => {
   return (
     <Layout>
-      <SEO></SEO>
+      <SEO title="downloadsound.cloud - Privacy Policy"></SEO>
 
       <Section style={{ backgroundColor: '#F8F8F8' }}>
         <Container>
