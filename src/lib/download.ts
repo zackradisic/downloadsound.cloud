@@ -18,7 +18,8 @@ export const downloadFile = async (link: string, filename: string) => {
       fetch(link)
         .then(resp => resp.blob())
         .then(blob => {
-          const url = window.URL.createObjectURL(blob)
+          const URL = window.URL || window.webkitURL
+          const url = URL.createObjectURL(blob)
           const a = document.createElement('a')
           a.style.display = 'none'
           a.href = url
@@ -30,8 +31,12 @@ export const downloadFile = async (link: string, filename: string) => {
         })
         .catch(err => console.log(err))
     } else {
-      const output = await downloadM3U8(link)
-      FileSaver.saveAs(output.blob, filename)
+      try {
+        const output = await downloadM3U8(link)
+        FileSaver.saveAs(output.blob, filename)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
@@ -54,9 +59,26 @@ const downloadM3U8 = async (link: string) => {
   const { data } = await axios.get(link)
   parser.push(data)
   parser.end()
-  const buffers = await audio.fetchAudio(...parser.manifest.segments.map(segment => segment.uri))
-  const concat = await audio.concatAudio(buffers)
-  const output = await audio.export(concat, 'audio/mp3')
+  let buffers
+  try {
+    console.log(parser.manifest.segments.map(segment => segment.uri))
+    buffers = await audio.fetchAudio(...parser.manifest.segments.map(segment => segment.uri))
+    console.log('this shit done')
+  } catch (err) {
+    console.log(err)
+  }
+  let concat
+  try {
+    concat = await audio.concatAudio(buffers)
+  } catch (err) {
+    console.log(err)
+  }
+  let output
+  try {
+    output = await audio.export(concat, 'audio/mp3')
+  } catch (err) {
+    console.log(err)
+  }
   return output
 }
 

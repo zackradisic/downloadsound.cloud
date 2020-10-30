@@ -174,6 +174,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
             setDownloading(true)
             await downloadFile(url, title)
           } catch (err) {
+            console.log(err)
             setErr('Failed to download, try refreshing the page.')
           }
           setDownloaded(true)
@@ -183,6 +184,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         setLoading(false)
         setDownload({ dlFunc })
       } catch (err) {
+        console.log(err)
         if (err.response) {
           switch (err.response.status) {
           case 408:
@@ -210,6 +212,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
           try {
             await downloadPlaylist(title, tracks)
           } catch (err) {
+            console.log(err)
             setErr('Failed to download, try refreshing the page.')
           }
           setDownloaded(true)
@@ -218,6 +221,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         setLoading(false)
         setDownload({ dlFunc })
       } catch (err) {
+        console.log(err)
         switch (err.response.status) {
         case 408:
           setErr('Request timedout, please try again.')
