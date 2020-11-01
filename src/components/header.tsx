@@ -19,7 +19,7 @@ const Header = () => {
           </Heading>
 
           <Heading subtitle size={5} renderAs="h2">
-          Download SoundCloud tracks and playlists easily
+          Download SoundCloud tracks and playlists to MP3 easily
           </Heading>
         </Container>
       </Hero.Body>
