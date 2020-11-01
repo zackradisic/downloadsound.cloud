@@ -14,7 +14,7 @@ interface DownloadedTrack {
 
 export const downloadFile = async (link: string, filename: string) => {
   if (typeof window !== 'undefined') {
-    if (link.includes('/progressive')) {
+    if (!link.includes('.m3u8')) {
       fetch(link)
         .then(resp => resp.blob())
         .then(blob => {
@@ -63,7 +63,6 @@ const downloadM3U8 = async (link: string) => {
   try {
     console.log(parser.manifest.segments.map(segment => segment.uri))
     buffers = await audio.fetchAudio(...parser.manifest.segments.map(segment => segment.uri))
-    console.log('this shit done')
   } catch (err) {
     console.log(err)
   }
