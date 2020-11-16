@@ -4,7 +4,6 @@ import FileSaver from 'file-saver'
 import { PlaylistTrack } from '../api'
 import _Promise from 'bluebird'
 import { Parser } from 'm3u8-parser'
-import Crunker from 'crunker'
 
 interface DownloadedTrack {
     blob: Blob,
@@ -33,7 +32,7 @@ export const downloadFile = async (link: string, filename: string) => {
     } else {
       try {
         const output = await downloadM3U8(link)
-        FileSaver.saveAs(output.blob, filename)
+        FileSaver.saveAs(output, filename + '.mp3')
       } catch (err) {
         console.log(err)
       }
@@ -54,31 +53,22 @@ interface M3U8Segment {
 }
 
 const downloadM3U8 = async (link: string) => {
-  const audio = new Crunker()
   const parser = new Parser()
   const { data } = await axios.get(link)
   parser.push(data)
   parser.end()
-  let buffers
-  try {
-    console.log(parser.manifest.segments.map(segment => segment.uri))
-    buffers = await audio.fetchAudio(...parser.manifest.segments.map(segment => segment.uri))
-  } catch (err) {
-    console.log(err)
-  }
-  let concat
-  try {
-    concat = await audio.concatAudio(buffers)
-  } catch (err) {
-    console.log(err)
-  }
-  let output
-  try {
-    output = await audio.export(concat, 'audio/mp3')
-  } catch (err) {
-    console.log(err)
-  }
-  return output
+  const urls = parser.manifest.segments.map(segment => segment.uri)
+  const promises = urls.map(async url => {
+    const res = await axios.get(url, {
+      responseType: 'blob',
+      headers: {
+        Accept: 'audio/mpeg'
+      }
+    })
+    return res.data
+  })
+  const buffers: any = await Promise.all(promises)
+  return new Blob(buffers)
 }
 
 const downloadByGroup = (concurrency = 10, ...tracks: PlaylistTrack[]) => {
@@ -86,8 +76,7 @@ const downloadByGroup = (concurrency = 10, ...tracks: PlaylistTrack[]) => {
     tracks,
     async (track: PlaylistTrack) => {
       if (track.hls) {
-        console.log(track.url)
-        const { blob } = await downloadM3U8(track.url)
+        const blob = await downloadM3U8(track.url)
         return {
           blob,
           fileName: `${track.title}.mp3`
