@@ -43,3 +43,7 @@ b {
     color: #4B4B4B;
 }
 
+.progress::-webkit-progress-value {
+    transition: width 0.5s ease;
+}
+

@@ -4,6 +4,7 @@ import FileSaver from 'file-saver'
 import { PlaylistTrack } from '../api'
 import _Promise from 'bluebird'
 import { Parser } from 'm3u8-parser'
+import React from 'react'
 
 interface DownloadedTrack {
     blob: Blob,
@@ -40,8 +41,8 @@ export const downloadFile = async (link: string, filename: string) => {
   }
 }
 
-export const downloadPlaylist = async (title: string, tracks: PlaylistTrack[]) => {
-  return downloadByGroup(5, ...tracks).then(downloaded => exportZip(title, ...downloaded))
+export const downloadPlaylist = async (title: string, tracks: PlaylistTrack[], setProgress?: React.Dispatch<React.SetStateAction<number>>) => {
+  return downloadByGroup(setProgress, 5, ...tracks).then(downloaded => exportZip(title, ...downloaded))
 }
 
 const downloadPlaylistTrack = (track: PlaylistTrack) => {
@@ -71,18 +72,27 @@ const downloadM3U8 = async (link: string) => {
   return new Blob(buffers)
 }
 
-const downloadByGroup = (concurrency = 10, ...tracks: PlaylistTrack[]) => {
+const downloadByGroup = (setProgress: React.Dispatch<React.SetStateAction<number>> | undefined, concurrency = 10, ...tracks: PlaylistTrack[]) => {
+  let count = 0
   return _Promise.map(
     tracks,
     async (track: PlaylistTrack) => {
       if (track.hls) {
         const blob = await downloadM3U8(track.url)
+        console.log(setProgress)
+        count++
+        if (setProgress) {
+          setProgress(count / tracks.length)
+        }
         return {
           blob,
           fileName: `${track.title}.mp3`
         }
       }
-      return await downloadPlaylistTrack(track)
+      const t = await downloadPlaylistTrack(track)
+      count++
+      setProgress(count / tracks.length)
+      return t
     },
     { concurrency }
   )
