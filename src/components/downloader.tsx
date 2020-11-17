@@ -4,6 +4,7 @@ import Img from 'gatsby-image'
 
 import Columns from 'react-bulma-components/lib/components/columns'
 import Image from 'react-bulma-components/lib/components/image'
+import Progress from 'react-bulma-components/lib/components/progress'
 
 import scdl from 'soundcloud-downloader'
 import { getPlaylistLinks, getTrackLink, Playlist, Track } from '../api'
@@ -45,7 +46,8 @@ interface DownloaderInputBarProps {
 interface DownloaderMediaInfoProps<T extends Track | Playlist> {
   media: T,
   dlFunc: dlFunc,
-  downloading: boolean
+  downloading: boolean,
+  progress: number
 }
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
@@ -116,8 +118,8 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   )
 }
 
-const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media }: DownloaderMediaInfoProps<T>) => {
-  const isTrack = !!(media as Playlist).tracks
+const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
+  const isTrack = !(media as Playlist).tracks
 
   const onClick = () => {
     if (downloading) return
@@ -134,6 +136,9 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
         <a onClick={onClick} className="button is-primary" style={{ fontWeight: 500, bottom: 0, marginTop: '3rem' }}>
           {downloading ? <BeatLoader loading={downloading} size={8} color="white"/> : 'Download'}
         </a>
+
+        {isTrack ? '' : <Progress style={{ marginTop: '3rem' }} className="is-primary" max={1} value={progress} size="small" />}
+
       </Columns.Column>
     </Columns>
   )
@@ -152,6 +157,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   const [download, setDownload] = useState<dlFunc>()
   const [downloading, setDownloading] = useState<boolean>(false)
   const [err, setErr] = useState<string>('')
+  const [progress, setProgress] = useState<number>(0)
 
   const submit = async (text: string) => {
     if (loading || downloaded) return
@@ -208,9 +214,10 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         const { url, title, tracks, author, imageURL } = await getPlaylistLinks(text)
         setMedia({ url, title, tracks, author, imageURL } as Playlist)
         const dlFunc = async () => {
+          const setProgressWrapper = (prog: number) => { console.log(prog); setProgress(prog) }
           setDownloading(true)
           try {
-            await downloadPlaylist(title, tracks)
+            await downloadPlaylist(title, tracks, setProgressWrapper)
           } catch (err) {
             console.log(err)
             setErr('Failed to download, try refreshing the page.')
@@ -253,7 +260,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
         {media ? '' : <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p></Columns.Column>}
 
-        {media ? <Columns.Column size={12}><DownloaderMediaInfo downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
+        {media ? <Columns.Column size={12}><DownloaderMediaInfo progress={progress} downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
 
         {media ? <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p> </Columns.Column> : ''}
       </Columns>
