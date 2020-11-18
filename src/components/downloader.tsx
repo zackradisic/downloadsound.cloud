@@ -199,6 +199,15 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
           case 422:
             setErr('URL is invalid')
             break
+          case 400:
+            if (err.response.data) {
+              if (err.response.data.err) {
+                setErr(err.response.data.err)
+                break
+              }
+            }
+            setErr('An internal server error occured, please try again.')
+            break
           default:
             setErr('An internal server error occured, please try again.')
             break
@@ -229,19 +238,32 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         setDownload({ dlFunc })
       } catch (err) {
         console.log(err)
-        switch (err.response.status) {
-        case 408:
-          setErr('Request timedout, please try again.')
-          break
-        case 422:
-          setErr('URL is invalid')
-          break
-        case 403:
-          setErr('That playlist has too many tracks (maximum is 100)')
-          break
-        default:
-          setErr('An internal server error occured, please try again.')
-          break
+        if (err.response) {
+          switch (err.response.status) {
+          case 408:
+            setErr('Request timedout, please try again.')
+            break
+          case 422:
+            setErr('URL is invalid')
+            break
+          case 403:
+            setErr('That playlist has too many tracks (maximum is 100)')
+            break
+          case 400:
+            if (err.response.data) {
+              if (err.response.data.err) {
+                setErr(err.response.data.err)
+                break
+              }
+            }
+            setErr('An internal server error occured, please try again.')
+            break
+          default:
+            setErr('An internal server error occured, please try again.')
+            break
+          }
+        } else {
+          setErr('An unknown error occured, please try again.')
         }
         setLoading(false)
       }
