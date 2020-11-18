@@ -199,6 +199,9 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
           case 422:
             setErr('URL is invalid')
             break
+          case 404:
+            setErr('Could not find that track/playlist')
+            break
           default:
             setErr('An internal server error occured, please try again.')
             break
@@ -238,6 +241,9 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
           break
         case 403:
           setErr('That playlist has too many tracks (maximum is 100)')
+          break
+        case 404:
+          setErr('Could not find that track/playlist')
           break
         default:
           setErr('An internal server error occured, please try again.')
