@@ -1,4 +1,4 @@
-import { Link } from 'gatsby'
+import { Link, navigate } from 'gatsby'
 import React, { useState } from 'react'
 import Img from 'gatsby-image'
 
@@ -19,6 +19,11 @@ if (typeof window !== 'undefined') {
   downloadFile = downloadStuff.downloadFile
   downloadPlaylist = downloadStuff.downloadPlaylist
 }
+
+const invalidLinks = [
+  'https://soundcloud.com/discover',
+  'https://soundcloud.com/you/likes'
+]
 
 export enum DownloadTypes {
     Track = 'track',
@@ -66,11 +71,12 @@ const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
 const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, text, setText, submit }: DownloaderInputBarProps) => {
   const [color, setColor] = useState<string>('is-primary')
   const valid = (text: string) => {
-    if (activeTab === DownloadTypes.Track) {
-      return scdl.isValidUrl(text) && !text.includes('/sets/')
-    } else {
-      return scdl.isValidUrl(text) && text.includes('/sets/')
+    if (invalidLinks.includes(text.toLowerCase())) return false
+    if (scdl.isValidUrl(text)) {
+      return text.includes('/sets/') ? DownloadTypes.Playlist : DownloadTypes.Track
     }
+
+    return false
   }
 
   const onPaste = (e) => {
@@ -78,22 +84,32 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
     const val = e.clipboardData.getData('Text')
     setText(val)
 
-    if (valid(val)) {
-      setColor('is-primary')
-    } else {
+    const tab = valid(val)
+    if (!tab) {
       setColor('is-danger')
+    } else {
+      if (tab === activeTab) {
+        setColor('is-primary')
+      } else {
+        navigate('/' + tab + '?url=' + val)
+      }
     }
   }
 
   const onChange = (e) => {
     e.preventDefault()
     const val = e.target.value
-    setText(e.target.value)
+    setText(val)
 
-    if (valid(val)) {
-      setColor('is-primary')
-    } else {
+    const tab = valid(val)
+    if (!tab) {
       setColor('is-danger')
+    } else {
+      if (tab === activeTab) {
+        setColor('is-primary')
+      } else {
+        navigate('/' + tab + '?url=' + val)
+      }
     }
   }
 
@@ -253,7 +269,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
             setErr('That playlist has too many tracks (maximum is 100).')
             break
           case 404:
-            setErr('Could not find that playlist/track.')
+            setErr("Could not find that playlist/track. Make sure it's a valid link to a track/playlist.")
             break
           case 400:
             if (err.response.data) {
