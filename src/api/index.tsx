@@ -15,6 +15,7 @@ export interface PlaylistTrack {
 
 export interface Playlist extends SoundcloudResource {
   tracks: PlaylistTrack[],
+  copyrightedTracks: string[]
 }
 
 export interface Track extends SoundcloudResource {
@@ -31,6 +32,6 @@ export const getTrackLink = async (link: string) => {
 }
 
 export const getPlaylistLinks = async (url: string) => {
-  const { data: { title, tracks, author, imageURL } } = await api.post('playlist', { url })
-  return { title, tracks, author, imageURL } as Playlist
+  const { data: { title, tracks, author, copyrightedTracks, imageURL } } = await api.post('playlist', { url })
+  return { title, tracks, author, copyrightedTracks, imageURL } as Playlist
 }

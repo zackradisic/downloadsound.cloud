@@ -136,10 +136,16 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
 
 const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
   const isTrack = !(media as Playlist).tracks
-
+  let copyrightedTracks: string = ''
   const onClick = () => {
     if (downloading) return
     dlFunc.dlFunc()
+  }
+
+  if (!isTrack) {
+    if ((media as Playlist).copyrightedTracks) {
+      copyrightedTracks = (media as Playlist).copyrightedTracks.map(title => `"${title}"`).join(', ')
+    }
   }
   return (
     <Columns>
@@ -155,6 +161,9 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
 
         {isTrack ? '' : <Progress style={{ marginTop: '3rem' }} className="is-primary" max={1} value={progress} size="small" />}
 
+        {
+          copyrightedTracks ? <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{'The following tracks will not be downloaded because of copyright: ' + copyrightedTracks}</p> : ''
+        }
       </Columns.Column>
     </Columns>
   )
@@ -239,8 +248,8 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     } else {
       setLoading(true)
       try {
-        const { url, title, tracks, author, imageURL } = await getPlaylistLinks(text)
-        setMedia({ url, title, tracks, author, imageURL } as Playlist)
+        const { url, title, tracks, author, copyrightedTracks, imageURL } = await getPlaylistLinks(text)
+        setMedia({ url, title, tracks, author, copyrightedTracks, imageURL } as Playlist)
         const dlFunc = async () => {
           const setProgressWrapper = (prog: number) => { console.log(prog); setProgress(prog) }
           setDownloading(true)
