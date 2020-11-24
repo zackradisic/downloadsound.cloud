@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "author": "https://github.com/zackradisic/",
   "dependencies": {
+    "@react-hook/media-query": "^1.1.1",
     "bluebird": "^3.7.2",
     "file-saver": "^2.0.2",
     "gatsby": "^2.24.67",

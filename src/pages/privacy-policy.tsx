@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
     <Layout>
       <SEO title="downloadsound.cloud - Privacy Policy"></SEO>
 
-      <Section style={{ backgroundColor: '#F8F8F8' }}>
+      <Section style={{ backgroundColor: '#ffe4cc' }}>
         <Container>
           <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
             <h1>Privacy Policy of downloadsound.cloud</h1>
