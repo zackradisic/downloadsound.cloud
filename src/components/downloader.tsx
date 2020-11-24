@@ -12,6 +12,7 @@ import { getPlaylistLinks, getTrackLink, Playlist, Track } from '../api'
 import BeatLoader from 'react-spinners/BeatLoader'
 
 import { useQueryParam, StringParam } from 'use-query-params'
+import { useMediaQueries, useMediaQuery } from '@react-hook/media-query'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -70,6 +71,10 @@ const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
 
 const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, text, setText, submit }: DownloaderInputBarProps) => {
   const [color, setColor] = useState<string>('is-primary')
+  const matches = useMediaQuery('only screen and (max-width: 768px)')
+  const size = matches ? '' : 'is-medium'
+  const borderRadius = matches ? '' : '10px'
+  const marginLeft = matches ? '' : '20px'
   const valid = (text: string) => {
     if (invalidLinks.includes(text.toLowerCase())) return false
     if (scdl.isValidUrl(text)) {
@@ -119,15 +124,15 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   return (
     <div className="field has-addons">
       <div className="control is-expanded">
-        <input disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input' + ' ' + color} type="text" placeholder="Enter a SoundCloud.com link..." />
+        <input id="download-input" style={{ borderRadius: borderRadius }} disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input ' + size + ' ' + color} type="text" placeholder="Enter a SoundCloud.com link..." />
       </div>
       <div className="control">
         { !hasMedia
-          ? <a onClick={submitWrapper} className="button is-primary" style={{ fontWeight: 500 }}>
+          ? <a onClick={submitWrapper} className={`button is-primary ${size}`} style={{ fontWeight: 500, borderRadius: borderRadius, marginLeft: marginLeft, boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
             {!isLoading ? 'Download' : ''}
             <BeatLoader loading={isLoading} size={8} color="white"/>
           </a> : <Link to="">
-            <a onClick={submitWrapper} className="button is-primary" style={{ fontWeight: 500 }}>Download another</a> </Link>}
+            <a onClick={submitWrapper} className={`button is-primary ${size}`} style={{ fontWeight: 500, borderRadius: borderRadius, marginLeft: marginLeft, boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>Download another</a> </Link>}
 
       </div>
     </div>
@@ -301,7 +306,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     }
   }
   return (
-    <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+    <div style={{ backgroundColor: 'white', padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
       <Columns>
         <Columns.Column size={12}>
           <DownloaderTabs activeTab={activeTab}/>
