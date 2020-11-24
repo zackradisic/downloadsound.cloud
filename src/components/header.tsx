@@ -13,13 +13,13 @@ const Header = () => {
       <Hero.Body>
         <Container className="has-text-centered">
           <Heading style={{ letterSpacing: '0.225em', color: '#000000', paddingBottom: '3.25rem', paddingTop: '3rem' }}>
-            <Link className="site-title" to="/">
+            <Link className="site-title is-size-1" to="/">
               downloadsound.cloud
             </Link>
           </Heading>
 
           <Heading subtitle size={5} renderAs="h2">
-          Download SoundCloud tracks and playlists to MP3 easily
+          Easily Download SoundCloud tracks and playlists to MP3
           </Heading>
         </Container>
       </Hero.Body>

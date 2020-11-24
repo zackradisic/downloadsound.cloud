@@ -44,7 +44,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
 
             <Columns.Column size={12}>
               <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                <h1 style={{ color: '#4B4B4B', fontSize: '24px' }}>HOW TO USE</h1>
+                <h1 style={{ color: '#4B4B4B', fontSize: '24px', fontWeight: 600 }}>HOW TO USE</h1>
                 <Content>
                   <ol>
                     <li>Copy the URL of the track or playlist from <a href="https://soundcloud.com">https://soundcloud.com</a></li>
@@ -57,7 +57,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
 
             <Columns.Column size={12} style={{ marginTop: '3rem' }}>
               <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                <h1 style={{ color: '#4B4B4B', fontSize: '24px' }}>INFO</h1>
+                <h1 style={{ color: '#4B4B4B', fontSize: '24px', fontWeight: 600 }}>INFO</h1>
 
                 <p>Download SoundCloud tracks and playlists directly from SoundCloud to your computer in the MP3 format.
               We allow you to download SoundCloud audio straight from the source, meaning your privacy and security is safe.

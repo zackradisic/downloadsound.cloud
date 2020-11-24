@@ -47,3 +47,15 @@ b {
     transition: width 0.5s ease;
 }
 
+.custom-shape-divider-top-1606238326 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.shape-fill {
+    fill: white;
+}
