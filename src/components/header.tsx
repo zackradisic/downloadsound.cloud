@@ -9,7 +9,7 @@ import Heading from 'react-bulma-components/lib/components/heading'
 
 const Header = () => {
   return (
-    <Hero style={{ backgroundColor: '#ffe4cc' }}>
+    <Hero style={{ backgroundColor: '#70d4f0' }}>
       <Hero.Body>
         <Container className="has-text-centered">
           <Heading style={{ letterSpacing: '0.225em', color: '#000000', paddingBottom: '3.25rem', paddingTop: '3rem' }}>
@@ -18,7 +18,7 @@ const Header = () => {
             </Link>
           </Heading>
 
-          <Heading subtitle size={5} renderAs="h2" style={{ color: '#3C3B3B' }}>
+          <Heading subtitle size={5} renderAs="h2" style={{ color: 'black' }}>
           Easily Download SoundCloud tracks and playlists to MP3
           </Heading>
         </Container>

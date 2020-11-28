@@ -58,7 +58,7 @@ interface DownloaderMediaInfoProps<T extends Track | Playlist> {
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
   const tabs = Object.keys(DownloadTypes).map(key => {
-    return <Columns.Column className="has-text-left tab-link" key={`tab-${key}`} style={{ fontWeight: DownloadTypes[key] === activeTab ? 600 : 400, color: DownloadTypes[key] === activeTab ? '#FF7700' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
+    return <Columns.Column className="has-text-left tab-link" key={`tab-${key}`} style={{ fontWeight: DownloadTypes[key] === activeTab ? 600 : 400, color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
       <Link to={`/${DownloadTypes[key]}`}>{DownloadTypes[key].toUpperCase()}</Link>
     </Columns.Column>
   })
@@ -141,6 +141,8 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
 
 const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
   const isTrack = !(media as Playlist).tracks
+  const matches = useMediaQuery('only screen and (max-width: 768px)')
+  const borderRadius = matches ? '' : '10px'
   let copyrightedTracks: string = ''
   const onClick = () => {
     if (downloading) return
@@ -155,12 +157,12 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
   return (
     <Columns>
       <Columns.Column size={4} >
-        <Image size="square" src={media.imageURL} style={{ borderRadius: '5px' }}/>
+        <Image size="square" src={media.imageURL} style={{ borderRadius: '10px' }}/>
       </Columns.Column>
       <Columns.Column className="media-info" style={{ height: '100%' }}>
         <h1 style={{ fontSize: '24px', color: '#3F3F3F', fontWeight: 600 }}>{media.title}</h1>
         <p>{media.author.username}</p>
-        <a onClick={onClick} className="button is-primary" style={{ fontWeight: 500, bottom: 0, marginTop: '3rem' }}>
+        <a onClick={onClick} className="button is-primary" style={{ fontWeight: 500, bottom: 0, marginTop: '3rem', borderRadius: borderRadius }}>
           {downloading ? <BeatLoader loading={downloading} size={8} color="white"/> : 'Download'}
         </a>
 

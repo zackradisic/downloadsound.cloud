@@ -35,7 +35,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
         <SEO
           title={title}
           description="Download tracks and playlists from SoundCloud with the click of a button. Entire playlists can be downloaded into a ZIP file."/>
-        <Section style={{ backgroundColor: '#ffe4cc' }}>
+        <Section style={{ backgroundColor: '#70d4f0' }}>
           <Container>
             <Columns>
 
