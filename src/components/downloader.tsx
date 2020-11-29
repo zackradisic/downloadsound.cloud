@@ -58,7 +58,7 @@ interface DownloaderMediaInfoProps<T extends Track | Playlist> {
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
   const tabs = Object.keys(DownloadTypes).map(key => {
-    return <Columns.Column className="has-text-left tab-link" key={`tab-${key}`} style={{ fontWeight: DownloadTypes[key] === activeTab ? 600 : 400, color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
+    return <Columns.Column className="has-text-left tab-link is-variable is-3-mobile" key={`tab-${key}`} style={{ fontWeight: DownloadTypes[key] === activeTab ? 600 : 400, color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
       <Link to={`/${DownloadTypes[key]}`}>{DownloadTypes[key].toUpperCase()}</Link>
     </Columns.Column>
   })
