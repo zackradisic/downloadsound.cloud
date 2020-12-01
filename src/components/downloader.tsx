@@ -28,7 +28,8 @@ const invalidLinks = [
 
 export enum DownloadTypes {
     Track = 'track',
-    Playlist = 'playlist'
+    Playlist = 'playlist',
+    Likes = 'likes'
 }
 
 interface DownloaderProps {
@@ -58,13 +59,31 @@ interface DownloaderMediaInfoProps<T extends Track | Playlist> {
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
   const tabs = Object.keys(DownloadTypes).map(key => {
-    return <Columns.Column className="has-text-left tab-link is-variable is-3-mobile" key={`tab-${key}`} style={{ fontWeight: DownloadTypes[key] === activeTab ? 600 : 400, color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9', letterSpacing: '0.3rem' }} size={3}>
-      <Link to={`/${DownloadTypes[key]}`}>{DownloadTypes[key].toUpperCase()}</Link>
-    </Columns.Column>
+    return (
+      <Link key={`tab-link-${key}`} to={`/${DownloadTypes[key]}`} style={{
+        fontWeight: DownloadTypes[key] === activeTab ? 600 : 400,
+        color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9'
+      }}>
+        {DownloadTypes[key].toUpperCase()}
+      </Link>
+    )
   })
+
   return (
     <Columns className="is-mobile">
-      {tabs}
+      <Columns.Column className="is-full-mobile is-two-third-tablet is-one-third-desktop">
+        <div className="has-text-left tab-link" style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          overflowX: 'scroll',
+
+          letterSpacing: '0.3rem'
+        }}>
+          {tabs}
+        </div>
+      </Columns.Column>
     </Columns>
   )
 }
@@ -78,7 +97,7 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   const valid = (text: string) => {
     if (invalidLinks.includes(text.toLowerCase())) return false
     if (scdl.isValidUrl(text)) {
-      return text.includes('/sets/') ? DownloadTypes.Playlist : DownloadTypes.Track
+      return text.includes('/sets/') ? DownloadTypes.Playlist : activeTab === DownloadTypes.Playlist ? DownloadTypes.Track : activeTab
     }
 
     return false
@@ -118,13 +137,21 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
     }
   }
 
+  let placeholder = 'Enter a SoundCloud.com track link...'
+
+  if (activeTab === DownloadTypes.Playlist) {
+    placeholder = 'Enter a SoundCloud.com playlist link...'
+  } else if (activeTab === DownloadTypes.Likes) {
+    placeholder = 'Enter a SoundCloud.com profile link...'
+  }
+
   const submitWrapper = async () => {
     submit(text)
   }
   return (
     <div className="field has-addons">
       <div className="control is-expanded">
-        <input id="download-input" style={{ borderRadius: borderRadius }} disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input ' + size + ' ' + color} type="text" placeholder="Enter a SoundCloud.com link..." />
+        <input id="download-input" style={{ borderRadius: borderRadius }} disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input ' + size + ' ' + color} type="text" placeholder={placeholder} />
       </div>
       <div className="control">
         { !hasMedia
@@ -255,7 +282,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     } else {
       setLoading(true)
       try {
-        const { url, title, tracks, author, copyrightedTracks, imageURL } = await getPlaylistLinks(text)
+        const { url, title, tracks, author, copyrightedTracks, imageURL } = await getPlaylistLinks(text, activeTab === DownloadTypes.Likes)
         setMedia({ url, title, tracks, author, copyrightedTracks, imageURL } as Playlist)
         const dlFunc = async () => {
           const setProgressWrapper = (prog: number) => { console.log(prog); setProgress(prog) }

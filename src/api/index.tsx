@@ -31,7 +31,7 @@ export const getTrackLink = async (link: string) => {
   return { url, title, author, imageURL } as Track
 }
 
-export const getPlaylistLinks = async (url: string) => {
-  const { data: { title, tracks, author, copyrightedTracks, imageURL } } = await api.post('playlist', { url })
+export const getPlaylistLinks = async (url: string, likes: boolean) => {
+  const { data: { title, tracks, author, copyrightedTracks, imageURL } } = await api.post(likes ? 'likes' : 'playlist', { url })
   return { title, tracks, author, copyrightedTracks, imageURL } as Playlist
 }
