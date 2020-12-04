@@ -45,16 +45,14 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
 
               <Columns.Column size={6} className="is-3">
                 <div style={{ backgroundColor: 'white', padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                  <h1 style={{ color: '#4B4B4B', fontSize: '24px', fontWeight: 600 }}>Information</h1>
+                  <h1 style={{ color: '#4B4B4B', fontSize: '24px', fontWeight: 600 }}>Browser Extension</h1>
 
-                  <p className="is-size-6" style={{ marginTop: '1rem' }}>Download SoundCloud tracks and playlists directly from SoundCloud to your computer in the MP3 format.
-              We allow you to download SoundCloud audio straight from the source, meaning your privacy and security is safe.
-              All you need is the URL of the SoundCloud track/playlist, and we will take care of the rest.
-              We are also the only site that allows entire SoundCloud playlists to be downloaded conveniently in a zip file.
+                  <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                    Want to download SoundCloud tracks and playlists while browsing soundcloud.com?
                   </p>
-                  <br />
-                  <p>
-                Make sure to <b>bookmark</b> the site if you find it helpful with saving SoundCloud playlists and tracks for offline use.
+
+                  <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                    <a href="#">Get our browser extension</a>, which lets you download audio directly on SoundCloud&apos;s site.
                   </p>
                 </div>
               </Columns.Column>
