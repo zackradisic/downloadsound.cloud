@@ -1,28 +1,35 @@
 import React from 'react'
 
 import Columns from 'react-bulma-components/lib/components/columns'
-import Section from 'react-bulma-components/lib/components/section'
+import Footer from 'react-bulma-components/lib/components/footer'
+import Hero from 'react-bulma-components/lib/components/hero'
 import Container from 'react-bulma-components/lib/components/container'
 import { Link } from 'gatsby'
+import useTheme from '../hooks/theme'
 
-const Footer = () => {
+const _Footer = () => {
+  const theme = useTheme()
   const links = ['ABOUT', 'CONTACT', 'PRIVACY POLICY'].map(link => <Columns.Column key={`link-${link}`}>
     <Link to={'/' + link.toLowerCase().replace(' ', '-')}>{link}</Link>
   </Columns.Column>)
   return (
-    <Section>
-      <Container>
-        <Columns>
-          {links}
+    <Hero className="z-index-1000">
+      <Hero.Footer style={{ backgroundColor: theme.containerBackground }}>
+        <Footer>
+          <Container>
+            <Columns>
+              {links}
 
-          <Columns.Column>
+              <Columns.Column>
           © {new Date().getFullYear()}
-          </Columns.Column>
+              </Columns.Column>
 
-        </Columns>
-      </Container>
-    </Section>
+            </Columns>
+          </Container>
+        </Footer>
+      </Hero.Footer>
+    </Hero>
   )
 }
 
-export default Footer
+export default _Footer

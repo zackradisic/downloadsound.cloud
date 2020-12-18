@@ -82,3 +82,26 @@ b {
     width: calc(123% + 1.3px);
     height: 468px;
 }
+
+@media (prefers-color-scheme: dark) {
+    #download-input::placeholder {
+        color: #4A4A4A;
+    }
+
+    .hero .hero-foot {
+        background-color: #171717;
+    }
+
+    .shape-fill {
+        fill: #FF3300;
+    }
+
+    .footer {
+        background-color: #171717!important;
+    }
+    
+}
+
+.z-index-1000 {
+    z-index: 1000;
+}

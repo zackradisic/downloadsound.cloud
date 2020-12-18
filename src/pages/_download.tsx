@@ -16,6 +16,7 @@ import { useQueryParam, StringParam } from 'use-query-params'
 import { WindowLocation } from '@reach/router'
 
 import './style.css'
+import useTheme from '../hooks/theme'
 
 export interface DownloadState {
   initialText: string
@@ -27,6 +28,7 @@ interface DownloadPageProps {
 }
 
 export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
+  const theme = useTheme()
   const title = activeTab === DownloadTypes.Track ? 'Download SoundCloud tracks to MP3 easily' : 'Download entire SoundCloud playlists to ZIP file'
 
   return (
@@ -35,7 +37,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
         <SEO
           title={title}
           description="Download tracks and playlists from SoundCloud with the click of a button. Entire playlists can be downloaded into a ZIP file."/>
-        <Section style={{ backgroundColor: '#70d4f0' }}>
+        <Section style={{ backgroundColor: theme.sky }}>
           <Container>
             <Columns>
 
@@ -44,8 +46,8 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
               </Columns.Column>
 
               <Columns.Column size={6} className="is-3">
-                <div style={{ backgroundColor: 'white', padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                  <h1 style={{ color: '#4B4B4B', fontSize: '24px', fontWeight: 600 }}>Browser Extension</h1>
+                <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+                  <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>Browser Extension</h1>
 
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
                     Want to download SoundCloud tracks and playlists while browsing soundcloud.com?
@@ -58,8 +60,8 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
               </Columns.Column>
 
               <Columns.Column size={6} className="is-3">
-                <div style={{ backgroundColor: 'white', padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                  <h1 style={{ color: '#4B4B4B', fontSize: '24px', fontWeight: 600 }}>How do I use this?</h1>
+                <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+                  <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>How do I use this?</h1>
                   <Content className="is-size-6">
                     <ol>
                       <li>Copy the URL of the track or playlist from <a href="https://soundcloud.com">https://soundcloud.com</a></li>
