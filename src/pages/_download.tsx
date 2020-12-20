@@ -54,7 +54,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                   </p>
 
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                    <a href="#">Get our browser extension</a>, which lets you download audio directly on SoundCloud&apos;s site.
+                    <a href="https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0">Get our browser extension</a>, which adds a download button to SoundCloud.
                   </p>
                 </div>
               </Columns.Column>
