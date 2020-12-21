@@ -26,14 +26,15 @@ const darkTheme: Theme = {
   textRegular: '#D1D1D1'
 }
 
-export const isDarkMode = () => {
+export const isDarkMode = (): boolean => {
   if (typeof window !== 'undefined') return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  return false
+  return undefined
 }
 
 const useTheme = (): Theme => {
   const dark = isDarkMode()
   if (dark) return darkTheme
+  if (dark === undefined) return darkTheme
   return lightTheme
 }
 
