@@ -332,6 +332,13 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
             }
             setErr('An internal server error occured, please try again.')
             break
+          case 409:
+            if (err.response.data) {
+              setErr(err.response.data.err)
+              break
+            }
+            setErr('An internal server error occured, please try again.')
+            break
           default:
             setErr('An internal server error occured, please try again.')
             break
