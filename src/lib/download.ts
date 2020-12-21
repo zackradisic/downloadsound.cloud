@@ -99,15 +99,20 @@ const downloadByGroup = (setProgress: React.Dispatch<React.SetStateAction<number
 }
 
 const exportZip = (filename: string, ...tracks: DownloadedTrack[]) => {
-  return new Promise((resolve, reject) => {
-    const zip = JsZip()
-    tracks.forEach((track, _) => {
-      zip.file(`${track.fileName}.mp3`, track.blob)
+  if (typeof window !== 'undefined') {
+    return new Promise((resolve, reject) => {
+      const zip = JsZip()
+      tracks.forEach((track, _) => {
+        const trackName = window.navigator.platform.includes('Mac') ? `${track.fileName.replace('/', ':')}.mp3` : `${track.fileName.replace('/', '∕')}.mp3`
+        zip.file(trackName, track.blob, {
+          createFolders: false
+        })
+      })
+      zip.generateAsync({ type: 'blob' }).then(zipFile => {
+        const fileName = `${filename}.zip`
+        return resolve(FileSaver.saveAs(zipFile, fileName))
+      })
+        .catch(err => reject(err))
     })
-    zip.generateAsync({ type: 'blob' }).then(zipFile => {
-      const fileName = `${filename}.zip`
-      return resolve(FileSaver.saveAs(zipFile, fileName))
-    })
-      .catch(err => reject(err))
-  })
+  }
 }

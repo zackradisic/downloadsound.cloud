@@ -13,6 +13,7 @@ import BeatLoader from 'react-spinners/BeatLoader'
 
 import { useQueryParam, StringParam } from 'use-query-params'
 import { useMediaQueries, useMediaQuery } from '@react-hook/media-query'
+import useTheme from '../hooks/theme'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -89,6 +90,7 @@ const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
 }
 
 const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, text, setText, submit }: DownloaderInputBarProps) => {
+  const theme = useTheme()
   const [color, setColor] = useState<string>('is-primary')
   const matches = useMediaQuery('only screen and (max-width: 768px)')
   const size = matches ? '' : 'is-medium'
@@ -97,7 +99,12 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   const valid = (text: string) => {
     if (invalidLinks.includes(text.toLowerCase())) return false
     if (scdl.isValidUrl(text)) {
-      return text.includes('/sets/') ? DownloadTypes.Playlist : activeTab === DownloadTypes.Playlist ? DownloadTypes.Track : activeTab
+      try {
+        const u = new URL(text)
+        return u.pathname.includes('/sets/') ? DownloadTypes.Playlist : activeTab === DownloadTypes.Playlist ? DownloadTypes.Track : activeTab
+      } catch (err) {
+        return false
+      }
     }
 
     return false
@@ -149,15 +156,15 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
     submit(text)
   }
   return (
-    <div className="field has-addons">
+    <div className="field has-addons" style={{ backgroundColor: theme.containerBackground }}>
       <div className="control is-expanded">
-        <input id="download-input" style={{ borderRadius: borderRadius }} disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input ' + size + ' ' + color} type="text" placeholder={placeholder} />
+        <input id="download-input" style={{ borderRadius: borderRadius, backgroundColor: theme.containerBackground, color: theme.textRegular }} disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input ' + size + ' ' + color} type="text" placeholder={placeholder} />
       </div>
       <div className="control">
         { !hasMedia
           ? <a onClick={submitWrapper} className={`button is-primary ${size}`} style={{ fontWeight: 500, borderRadius: borderRadius, marginLeft: marginLeft, boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
             {!isLoading ? 'Download' : ''}
-            <BeatLoader loading={isLoading} size={8} color="white"/>
+            <BeatLoader loading={isLoading} size={8} color={theme.containerBackground}/>
           </a> : <Link to="">
             <a onClick={submitWrapper} className={`button is-primary ${size}`} style={{ fontWeight: 500, borderRadius: borderRadius, marginLeft: marginLeft, boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>Download another</a> </Link>}
 
@@ -167,6 +174,7 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
 }
 
 const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
+  const theme = useTheme()
   const isTrack = !(media as Playlist).tracks
   const matches = useMediaQuery('only screen and (max-width: 768px)')
   const borderRadius = matches ? '' : '10px'
@@ -187,8 +195,8 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
         <Image size="square" src={media.imageURL} style={{ borderRadius: '10px' }}/>
       </Columns.Column>
       <Columns.Column className="media-info" style={{ height: '100%' }}>
-        <h1 style={{ fontSize: '24px', color: '#3F3F3F', fontWeight: 600 }}>{media.title}</h1>
-        <p>{media.author.username}</p>
+        <h1 style={{ fontSize: '24px', fontWeight: 600, color: theme.containerTitle }}>{media.title}</h1>
+        <p style={{ color: theme.textRegular }}>{media.author.username}</p>
         <a onClick={onClick} className="button is-primary" style={{ fontWeight: 500, bottom: 0, marginTop: '3rem', borderRadius: borderRadius }}>
           {downloading ? <BeatLoader loading={downloading} size={8} color="white"/> : 'Download'}
         </a>
@@ -217,6 +225,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   const [downloading, setDownloading] = useState<boolean>(false)
   const [err, setErr] = useState<string>('')
   const [progress, setProgress] = useState<number>(0)
+  const theme = useTheme()
 
   const submit = async (text: string) => {
     if (loading || downloaded) return
@@ -323,6 +332,13 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
             }
             setErr('An internal server error occured, please try again.')
             break
+          case 409:
+            if (err.response.data) {
+              setErr(err.response.data.err)
+              break
+            }
+            setErr('An internal server error occured, please try again.')
+            break
           default:
             setErr('An internal server error occured, please try again.')
             break
@@ -335,7 +351,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     }
   }
   return (
-    <div style={{ backgroundColor: 'white', padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+    <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
       <Columns>
         <Columns.Column size={12}>
           <DownloaderTabs activeTab={activeTab}/>
