@@ -101,6 +101,9 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
     if (scdl.isValidUrl(text)) {
       try {
         const u = new URL(text)
+        if (u.pathname.indexOf('/discover/sets/personalized-tracks::') === 0) {
+          return DownloadTypes.Track
+        }
         return u.pathname.includes('/sets/') ? DownloadTypes.Playlist : activeTab === DownloadTypes.Playlist ? DownloadTypes.Track : activeTab
       } catch (err) {
         return false
