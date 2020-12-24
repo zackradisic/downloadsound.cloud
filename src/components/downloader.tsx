@@ -14,6 +14,7 @@ import BeatLoader from 'react-spinners/BeatLoader'
 import { useQueryParam, StringParam } from 'use-query-params'
 import { useMediaQueries, useMediaQuery } from '@react-hook/media-query'
 import useTheme from '../hooks/theme'
+import toast, { Toaster } from 'react-hot-toast'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -55,7 +56,8 @@ interface DownloaderMediaInfoProps<T extends Track | Playlist> {
   media: T,
   dlFunc: dlFunc,
   downloading: boolean,
-  progress: number
+  progress: number,
+  share: () => void
 }
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
@@ -176,7 +178,7 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   )
 }
 
-const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
+const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
   const theme = useTheme()
   const isTrack = !(media as Playlist).tracks
   const matches = useMediaQuery('only screen and (max-width: 768px)')
@@ -192,6 +194,7 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
       copyrightedTracks = (media as Playlist).copyrightedTracks.map(title => `"${title}"`).join(', ')
     }
   }
+
   return (
     <Columns>
       <Columns.Column size={4} >
@@ -204,12 +207,17 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ downloading, dlFunc, 
           {downloading ? <BeatLoader loading={downloading} size={8} color="white"/> : 'Download'}
         </a>
 
+        <a onClick={share} className="button is-primary is-outlined" style={{ marginLeft: '1.5rem', fontWeight: 500, bottom: 0, marginTop: '3rem', borderRadius: borderRadius }}>
+          Share
+        </a>
+
         {isTrack ? '' : <Progress style={{ marginTop: '3rem' }} className="is-primary" max={1} value={progress} size="small" />}
 
         {
           copyrightedTracks ? <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{'The following tracks will not be downloaded because of copyright: ' + copyrightedTracks}</p> : ''
         }
       </Columns.Column>
+      <Toaster />
     </Columns>
   )
 }
@@ -229,6 +237,11 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   const [err, setErr] = useState<string>('')
   const [progress, setProgress] = useState<number>(0)
   const theme = useTheme()
+
+  const share = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/${activeTab}?url=${text}`)
+    toast('Share link copied to clipboard!')
+  }
 
   const submit = async (text: string) => {
     if (loading || downloaded) return
@@ -366,7 +379,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
         {media ? '' : <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p></Columns.Column>}
 
-        {media ? <Columns.Column size={12}><DownloaderMediaInfo progress={progress} downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
+        {media ? <Columns.Column size={12}><DownloaderMediaInfo share={share} progress={progress} downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
 
         {media ? <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p> </Columns.Column> : ''}
       </Columns>
