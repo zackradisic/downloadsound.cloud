@@ -29,14 +29,12 @@ interface DownloadPageProps {
 
 export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
   const theme = useTheme()
-  const title = activeTab === DownloadTypes.Track ? 'Download SoundCloud tracks to MP3 easily' : 'Download entire SoundCloud playlists to ZIP file'
-
   return (
     <>
       <Layout>
         <SEO
-          title={title}
-          description="Download tracks and playlists from SoundCloud with the click of a button. Entire playlists can be downloaded into a ZIP file."/>
+          title={'downloadsound.cloud'}
+          description="Download tracks and entire playlists into a single ZIP file for free."/>
         <Section style={{ backgroundColor: theme.sky }}>
           <Container>
             <Columns>
