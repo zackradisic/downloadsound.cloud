@@ -87,7 +87,7 @@ function SEO ({ description, lang, meta, title }) {
         }
       ].concat(meta)}
     >
-      {process.env.PROD ? <script async src={process.env.GTAG_SCIRPT}></script> : ''}
+      {process.env.PROD ? <script async src={process.env.GTAG_SCRIPT}></script> : ''}
     </Helmet>
   )
 }
