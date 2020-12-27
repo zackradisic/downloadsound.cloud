@@ -5,13 +5,25 @@
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { useStaticQuery, graphql } from 'gatsby'
 import DownloadSoundCloudImg from '../images/downloadsound.cloud-og.png'
 
 function SEO ({ description, lang, meta, title }) {
+  useEffect(() => {
+    if (!process.env.PROD) return
+    const gtag = document.createElement('script')
+    gtag.type = 'text/javascript'
+    gtag.innerHTML = `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', '${process.env.GTAG_ID}');`
+    document.head.appendChild(gtag)
+  }, [])
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -74,7 +86,9 @@ function SEO ({ description, lang, meta, title }) {
           content: DownloadSoundCloudImg
         }
       ].concat(meta)}
-    />
+    >
+      {process.env.PROD ? <script async src={process.env.GTAG_SCIRPT}></script> : ''}
+    </Helmet>
   )
 }
 
