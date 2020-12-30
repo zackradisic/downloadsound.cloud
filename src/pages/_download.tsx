@@ -44,7 +44,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
               </Columns.Column>
 
               <Columns.Column size={6} className="is-3">
-                <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+                <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
                   <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>Browser Extension</h1>
 
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
@@ -58,13 +58,13 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
               </Columns.Column>
 
               <Columns.Column size={6} className="is-3">
-                <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+                <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
                   <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>How do I use this?</h1>
                   <Content className="is-size-6">
                     <ol>
                       <li>Copy the URL of the track or playlist from <a href="https://soundcloud.com">https://soundcloud.com</a></li>
-                      <li>Paste the URL of the track in the input bar in the &apos;<b>Track</b>&apos; or &apos;<b>Playlist</b>&apos; tab</li>
-                      <li>Click the &apos;<b>Download</b>&apos; button</li>
+                      <li>Paste the URL of the track in the input bar in the &apos;<b style={{ color: theme.boldText }}>Track</b>&apos; or &apos;<b style={{ color: theme.boldText }}>Playlist</b>&apos; tab</li>
+                      <li>Click the &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; button</li>
                     </ol>
                   </Content>
                 </div>

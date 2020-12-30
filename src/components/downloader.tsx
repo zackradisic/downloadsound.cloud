@@ -15,6 +15,8 @@ import { useQueryParam, StringParam } from 'use-query-params'
 import { useMediaQueries, useMediaQuery } from '@react-hook/media-query'
 import useTheme from '../hooks/theme'
 import toast, { Toaster } from 'react-hot-toast'
+import gtag from '../lib/gtag'
+import getProgressHint from '../lib/progress'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -158,13 +160,11 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   }
 
   const submitWrapper = async () => {
-    if (typeof window !== 'undefined') {
-      (window as any).gtag('event', 'download_click', {
-        event_category: 'Downloader Click',
-        event_label: `${activeTab} click`,
-        value: text
-      })
-    }
+    gtag('event', 'download_click', {
+      event_category: 'Downloader Click',
+      event_label: `${activeTab} click`,
+      value: text
+    })
     submit(text)
   }
   return (
@@ -208,8 +208,13 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, d
         <Image size="square" src={media.imageURL} style={{ borderRadius: '10px' }}/>
       </Columns.Column>
       <Columns.Column className="media-info" style={{ height: '100%' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 600, color: theme.containerTitle }}>{media.title}</h1>
-        <p style={{ color: theme.textRegular }}>{media.author.username}</p>
+        <div>
+          <h1 style={{ fontSize: '24px', fontWeight: 600, color: theme.containerTitle }}>
+            {media.title}
+            {isTrack ? '' : <p style={{ marginLeft: '1rem', color: theme.textHint, display: 'inline', fontWeight: 400, fontSize: '1rem' }}>{(media as Playlist).tracks.length} tracks</p>}
+          </h1>
+        </div>
+        <p style={{ color: theme.textRegular }}>by {media.author.username}</p>
         <a onClick={onClick} className="button is-primary" style={{ fontWeight: 500, bottom: 0, marginTop: '3rem', borderRadius: borderRadius }}>
           {downloading ? <BeatLoader loading={downloading} size={8} color="white"/> : 'Download'}
         </a>
@@ -218,7 +223,12 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, d
           Share
         </a>
 
-        {isTrack ? '' : <Progress style={{ marginTop: '3rem' }} className="is-primary" max={1} value={progress} size="small" />}
+        {isTrack ? '' : (
+          <>
+            <Progress style={{ marginTop: '3rem' }} className="is-primary" max={1} value={progress} size="small" />
+            <p style={{ color: theme.textRegular }}>{getProgressHint(progress)}</p>
+          </>
+        )}
 
         {
           copyrightedTracks ? <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{'The following tracks will not be downloaded because of copyright: ' + copyrightedTracks}</p> : ''
@@ -246,13 +256,11 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   const theme = useTheme()
 
   const share = () => {
-    if (typeof window !== 'undefined') {
-      (window as any).gtag('event', 'share', {
-        event_category: 'Share',
-        event_label: 'Share Link Click',
-        value: `${activeTab}/${text}`
-      })
-    }
+    gtag('event', 'share', {
+      event_category: 'Share',
+      event_label: 'Share Link Click',
+      value: `${activeTab}/${text}`
+    })
     navigator.clipboard.writeText(`${window.location.origin}/${activeTab}?url=${text}`)
     toast('Share link copied to clipboard!')
   }
