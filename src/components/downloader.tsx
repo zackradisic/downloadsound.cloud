@@ -158,6 +158,13 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   }
 
   const submitWrapper = async () => {
+    if (typeof window !== 'undefined') {
+      (window as any).gtag('event', 'download_click', {
+        event_category: 'Downloader Click',
+        event_label: `${activeTab} click`,
+        value: text
+      })
+    }
     submit(text)
   }
   return (
@@ -239,6 +246,13 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   const theme = useTheme()
 
   const share = () => {
+    if (typeof window !== 'undefined') {
+      (window as any).gtag('event', 'share', {
+        event_category: 'Share',
+        event_label: 'Share Link Click',
+        value: `${activeTab}/${text}`
+      })
+    }
     navigator.clipboard.writeText(`${window.location.origin}/${activeTab}?url=${text}`)
     toast('Share link copied to clipboard!')
   }

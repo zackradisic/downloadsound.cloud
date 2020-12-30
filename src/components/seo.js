@@ -12,19 +12,6 @@ import { useStaticQuery, graphql } from 'gatsby'
 import DownloadSoundCloudImg from '../images/downloadsound.cloud-og.png'
 
 function SEO ({ description, lang, meta, title }) {
-  console.log(process.env.GATSBY_PROD)
-  useEffect(() => {
-    const gtag = document.createElement('script')
-    gtag.type = 'text/javascript'
-    gtag.innerHTML = `
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', '${process.env.GATSBY_GTAG_ID}');`
-    document.head.appendChild(gtag)
-    console.log(gtag)
-  }, [])
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -88,7 +75,6 @@ function SEO ({ description, lang, meta, title }) {
         }
       ].concat(meta)}
     >
-      {process.env.GATSBY_PROD ? <script async src={process.env.GATSBY_GTAG_SCRIPT}></script> : ''}
     </Helmet>
   )
 }
