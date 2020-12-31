@@ -10,7 +10,8 @@ export interface SoundcloudResource {
 export interface PlaylistTrack {
     title: string,
     url: string,
-    hls: true
+    hls: true,
+    author: string
 }
 
 export interface Playlist extends SoundcloudResource {

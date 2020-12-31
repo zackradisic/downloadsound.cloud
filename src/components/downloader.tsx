@@ -1,5 +1,5 @@
 import { Link, navigate } from 'gatsby'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Img from 'gatsby-image'
 
 import Columns from 'react-bulma-components/lib/components/columns'
@@ -17,6 +17,7 @@ import useTheme from '../hooks/theme'
 import toast, { Toaster } from 'react-hot-toast'
 import gtag from '../lib/gtag'
 import getProgressHint from '../lib/progress'
+import TrackList from './track-list'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -233,6 +234,7 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, d
         {
           copyrightedTracks ? <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{'The following tracks will not be downloaded because of copyright: ' + copyrightedTracks}</p> : ''
         }
+
       </Columns.Column>
       <Toaster />
     </Columns>
@@ -241,6 +243,10 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, d
 
 interface dlFunc {
   dlFunc: Function
+}
+
+interface submitFunc {
+  submit: (text: string) => Promise<void>
 }
 
 const Downloader = ({ activeTab }: DownloaderProps) => {
@@ -388,6 +394,25 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
       }
     }
   }
+
+  useEffect(() => {
+    if (activeTab !== DownloadTypes.Track) {
+      const dlFunc = async () => {
+        const setProgressWrapper = (prog: number) => { console.log(prog); setProgress(prog) }
+        setDownloading(true)
+        try {
+          await downloadPlaylist(media.title, (media as Playlist).tracks, setProgressWrapper)
+        } catch (err) {
+          console.log(err)
+          setErr('Failed to download, try refreshing the page.')
+        }
+        setDownloaded(true)
+        setDownloading(false)
+      }
+
+      setDownload({ dlFunc })
+    }
+  }, [media])
   return (
     <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
       <Columns>
@@ -404,6 +429,8 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         {media ? <Columns.Column size={12}><DownloaderMediaInfo share={share} progress={progress} downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
 
         {media ? <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p> </Columns.Column> : ''}
+
+        {media && activeTab !== DownloadTypes.Track ? <Columns.Column size={12}><TrackList media={media as Playlist} setMedia={setMedia} /></Columns.Column> : ''}
       </Columns>
     </div>
   )
