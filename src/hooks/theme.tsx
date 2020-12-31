@@ -35,10 +35,7 @@ const darkTheme: Theme = {
   boldText: '#D7D7D7'
 }
 
-export const isDarkMode = (): boolean => {
-  if (typeof window !== 'undefined') return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  return undefined
-}
+export const isDarkMode = (): boolean => true
 
 const useTheme = (): Theme => {
   return darkTheme
