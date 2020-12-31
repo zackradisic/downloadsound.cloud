@@ -41,10 +41,7 @@ export const isDarkMode = (): boolean => {
 }
 
 const useTheme = (): Theme => {
-  const dark = isDarkMode()
-  if (dark) return darkTheme
-  if (dark === undefined) return darkTheme
-  return lightTheme
+  return darkTheme
 }
 
 export default useTheme

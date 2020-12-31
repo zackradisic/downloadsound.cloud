@@ -83,25 +83,26 @@ b {
     height: 468px;
 }
 
-@media (prefers-color-scheme: dark) {
-    #download-input::placeholder {
-        color: #4A4A4A;
-    }
+#download-input::placeholder {
+    color: #4A4A4A;
+}
 
-    .hero .hero-foot {
-        background-color: #171717;
-    }
+.hero .hero-foot {
+    background-color: #171717;
+}
 
-    .shape-fill {
-        fill: #FF3300;
-    }
+.shape-fill {
+    fill: #FF3300;
+}
 
-    .footer {
-        background-color: #171717!important;
-    }
-    
+.footer {
+    background-color: #171717!important;
 }
 
 .z-index-1000 {
     z-index: 1000;
+}
+
+.track-list-item-container {
+    margin-bottom: 0px!important;
 }
