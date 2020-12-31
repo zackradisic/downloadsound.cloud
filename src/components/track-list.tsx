@@ -43,11 +43,11 @@ const TrackListItem = ({ title, index, author, deleteTrack }: TrackListItemProps
     <>
       <div style={{ display: 'flex', flexDirection: 'row', paddingTop: '10px', paddingBottom: '10px', overflowX: 'scroll' }}>
 
-        <p style={{ flexShrink: 0, color: '#B5B5B5' }}>{index}.</p>
-        <p style={{ flexShrink: 1, marginLeft: '1rem', color: '#8F8F8F', overflowX: 'hidden' }}><span style={{ color: '#E9E9E9', overflowX: 'hidden' }}>{title}</span>   — {author}</p>
+        <p style={{ flexShrink: 0, color: '#B5B5B5', marginBottom: '0px' }}>{index}.</p>
+        <p style={{ flexShrink: 1, marginLeft: '1rem', color: '#8F8F8F', overflowX: 'hidden', marginBottom: '0px' }}><span style={{ color: '#E9E9E9', overflowX: 'hidden' }}>{title}</span>   — {author}</p>
 
         <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
-          <a href="#" onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => e.preventDefault()}><h1 style={{ letterSpacing: '0.1rem', color: '#B9B9B9', fontSize: '0.875rem', cursor: 'pointer' }} onClick={() => deleteTrack(index - 1)}>REMOVE</h1></a>
+          <a href="#" onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => e.preventDefault()}><h1 style={{ marginBottom: '0px', letterSpacing: '0.1rem', color: '#B9B9B9', fontSize: '0.875rem', cursor: 'pointer' }} onClick={() => deleteTrack(index - 1)}>REMOVE</h1></a>
         </div>
 
       </div>
