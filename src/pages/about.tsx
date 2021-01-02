@@ -11,6 +11,8 @@ import Content from 'react-bulma-components/lib/components/content'
 import { Link } from 'gatsby'
 import useTheme from '../hooks/theme'
 
+import './style.css'
+
 const About = () => {
   const theme = useTheme()
   return (
@@ -19,8 +21,8 @@ const About = () => {
 
       <Section style={{ backgroundColor: theme.sky }}>
         <Container>
-          <div style={{ backgroundColor: theme.containerBackground, padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-            <h1>About</h1>
+          <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1rem', borderRadius: '5px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+            <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>About</h1>
             <p> <Link to="/">downloadsound.cloud</Link> was created because available options for downloading SoundCloud
             tracks and playlists simply weren&apos;t good enough. There were a few problems we found with current sites:</p>
 

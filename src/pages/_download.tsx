@@ -67,6 +67,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                       <li>Click the &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; button</li>
                     </ol>
                   </Content>
+                  <p>Read our <a href="how-to-download-soundcloud-playlist">tutorial</a> for more information.</p>
                 </div>
               </Columns.Column>
 
