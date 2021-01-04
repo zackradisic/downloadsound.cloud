@@ -33,7 +33,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
     <>
       <Layout>
         <SEO
-          title={'downloadsound.cloud'}
+          title={`Download SoundCloud ${activeTab === DownloadTypes.Track || activeTab === DownloadTypes.Likes ? 'Tracks' : 'Playlist'}`}
           description="Download tracks and entire playlists into a single ZIP file for free."/>
         <Section style={{ backgroundColor: theme.sky }}>
           <Container>
