@@ -29,12 +29,32 @@ interface DownloadPageProps {
 
 export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
   const theme = useTheme()
+  let title = ''
+  let desc = ''
+  let howTitle = ''
+  switch (activeTab) {
+  case DownloadTypes.Playlist:
+    title = 'Download entire SoundCloud playlists to ZIP file'
+    desc = 'Download playlists into a single ZIP file with the click of a button.'
+    howTitle = 'How can I download entire SoundCloud playlists to ZIP?'
+    break
+  case DownloadTypes.Track:
+    title = 'Download SoundCloud Tracks to MP3'
+    desc = 'Download your favorite SoundCloud tracks to MP3 files with one click.'
+    howTitle = 'How can I download SoundCloud tracks?'
+    break
+  case DownloadTypes.Likes:
+    title = 'Download all of your SoundCloud likes'
+    desc = 'Download all of your liked SoundCloud music with one click.'
+    howTitle = 'How can I download all my SoundCloud likes?'
+    break
+  }
   return (
     <>
       <Layout>
         <SEO
-          title={`Download SoundCloud ${activeTab === DownloadTypes.Track || activeTab === DownloadTypes.Likes ? 'Tracks' : 'Playlist'}`}
-          description="Download tracks and entire playlists into a single ZIP file for free."/>
+          title={title}
+          description={desc} />
         <Section style={{ backgroundColor: theme.sky }}>
           <Container>
             <Columns>
@@ -59,7 +79,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
 
               <Columns.Column size={6} className="is-3">
                 <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                  <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>How do I use this?</h1>
+                  <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>{howTitle}</h1>
                   <Content className="is-size-6">
                     <ol>
                       <li>Copy the URL of the track or playlist from <a href="https://soundcloud.com">https://soundcloud.com</a></li>
