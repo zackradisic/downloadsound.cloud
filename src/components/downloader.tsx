@@ -6,7 +6,6 @@ import Columns from 'react-bulma-components/lib/components/columns'
 import Image from 'react-bulma-components/lib/components/image'
 import Progress from 'react-bulma-components/lib/components/progress'
 
-import scdl from 'soundcloud-downloader'
 import { getPlaylistLinks, getTrackLink, Playlist, Track } from '../api'
 
 import BeatLoader from 'react-spinners/BeatLoader'
@@ -18,6 +17,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import gtag from '../lib/gtag'
 import getProgressHint from '../lib/progress'
 import TrackList from './track-list'
+import { isFirebaseURL, isURL } from '../lib/util'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -103,8 +103,9 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
   const marginLeft = matches ? '' : '20px'
   const valid = (text: string) => {
     if (invalidLinks.includes(text.toLowerCase())) return false
-    if (scdl.isValidUrl(text)) {
+    if (isURL(text)) {
       try {
+        if (isFirebaseURL(text)) return activeTab
         const u = new URL(text)
         if (u.pathname.indexOf('/discover/sets/personalized-tracks::') === 0) {
           return DownloadTypes.Track
@@ -273,7 +274,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
   const submit = async (text: string) => {
     if (loading || downloaded) return
-    if (!scdl.isValidUrl(text)) {
+    if (!isURL(text)) {
       setErr('That URL is invalid, please try another one.')
       return
     }
