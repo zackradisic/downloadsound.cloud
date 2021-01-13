@@ -27,28 +27,60 @@ interface DownloadPageProps {
     location?: WindowLocation<DownloadState>
 }
 
-export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
+// eslint-disable-next-line no-undef
+const getContent = (activeTab: DownloadTypes): [string, string, string, JSX.Element[], JSX.Element] => {
   const theme = useTheme()
   let title = ''
   let desc = ''
   let howTitle = ''
+  const steps = []
+  let tutorial = <></>
   switch (activeTab) {
   case DownloadTypes.Playlist:
     title = 'Download entire SoundCloud playlists to ZIP file'
     desc = 'Download playlists into a single ZIP file with the click of a button.'
     howTitle = 'How can I download entire SoundCloud playlists to ZIP?'
+    steps.push(
+      <li>Get the URL of the playlist from <a href="https://soundcloud.com">https://soundcloud.com</a> (if it&apos;s private make sure you copy the secret share link)</li>,
+      <li>In the input above, paste the URL.</li>,
+      <li>Press &apos;<b style={{ color: theme.boldText }}>Download</b>&apos;</li>,
+      <li>You can click &apos;<b style={{ color: theme.boldText }}>Open track list</b>&apos; and review the tracks or remove unwanted ones.</li>,
+      <li>Press &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; again, and your playlist will begin downloading as a ZIP file</li>
+    )
+    tutorial = <p>Read our <a href="how-to-download-soundcloud-playlist">tutorial</a> for more information.</p>
     break
   case DownloadTypes.Track:
     title = 'Download SoundCloud Tracks to MP3'
     desc = 'Download your favorite SoundCloud tracks to MP3 files with one click.'
-    howTitle = 'How can I download SoundCloud tracks?'
+    howTitle = 'How do I download tracks from SoundCloud?'
+    steps.push(
+      <li>Find and copy the URL of the track from <a href="https://soundcloud.com">https://soundcloud.com</a></li>,
+      <li>Paste the URL of the track in the input bar in the &apos;<b style={{ color: theme.boldText }}>Track</b>&apos;tab</li>,
+      <li>Click the &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; button</li>
+    )
+    tutorial = <p>Need help? See the downloading tracks <a href="how-to-download-soundcloud-tracks">tutorial</a> for more guidance.</p>
     break
   case DownloadTypes.Likes:
     title = 'Download all of your SoundCloud likes'
     desc = 'Download all of your liked SoundCloud music with one click.'
-    howTitle = 'How can I download all my SoundCloud likes?'
+    howTitle = 'How do I download all of my SoundCloud likes?'
+    steps.push(
+      <li>Copy any profile URL from <a href="https://soundcloud.com">https://soundcloud.com</a></li>,
+      <li>Paste that same URL above.</li>,
+      <li>Hit the &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; button</li>,
+      <li>If you want to look at the tracks, or remove some, press &apos;<b style={{ color: theme.boldText }}>Open track list</b>&apos;</li>,
+      <li>When you are ready, click &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; and all of the likes will start downloading to a ZIP file on your computer.</li>
+    )
+    tutorial = <p>If you&apos;re stuck, visit the downloading likes <a href="how-to-download-soundcloud-likes">tutorial</a> for more help.</p>
     break
   }
+
+  return [title, desc, howTitle, steps, tutorial]
+}
+
+export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
+  const theme = useTheme()
+  const [title, desc, howTitle, steps, tutorial] = getContent(activeTab)
   return (
     <>
       <Layout>
@@ -65,6 +97,18 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
 
               <Columns.Column size={6} className="is-3">
                 <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+                  <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>{howTitle}</h1>
+                  <Content className="is-size-6">
+                    <ol>
+                      {steps}
+                    </ol>
+                  </Content>
+                  { tutorial }
+                </div>
+              </Columns.Column>
+
+              <Columns.Column size={6} className="is-3">
+                <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
                   <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>Browser Extension</h1>
 
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
@@ -74,20 +118,6 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
                     <a href="https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0">Get our browser extension</a>, which adds a download button to SoundCloud.
                   </p>
-                </div>
-              </Columns.Column>
-
-              <Columns.Column size={6} className="is-3">
-                <div style={{ color: theme.containerText, backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
-                  <h1 style={{ color: theme.containerTitle, fontSize: '24px', fontWeight: 600 }}>{howTitle}</h1>
-                  <Content className="is-size-6">
-                    <ol>
-                      <li>Copy the URL of the track or playlist from <a href="https://soundcloud.com">https://soundcloud.com</a></li>
-                      <li>Paste the URL of the track in the input bar in the &apos;<b style={{ color: theme.boldText }}>Track</b>&apos; or &apos;<b style={{ color: theme.boldText }}>Playlist</b>&apos; tab</li>
-                      <li>Click the &apos;<b style={{ color: theme.boldText }}>Download</b>&apos; button</li>
-                    </ol>
-                  </Content>
-                  <p>Read our <a href="how-to-download-soundcloud-playlist">tutorial</a> for more information.</p>
                 </div>
               </Columns.Column>
 
