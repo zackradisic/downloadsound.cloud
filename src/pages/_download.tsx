@@ -1,4 +1,5 @@
-import React from 'react'
+/* eslint-disable indent */ // Weird prettier error occurs, sorry
+import React, { useState } from 'react'
 import { Link, PageProps } from 'gatsby'
 
 import Layout from '../components/layout'
@@ -17,6 +18,8 @@ import { WindowLocation } from '@reach/router'
 
 import './style.css'
 import useTheme from '../hooks/theme'
+import { getActiveUserData, isActive } from '../lib/active-user'
+import FrequentUserBanner from '../components/FrequentUserBanner'
 
 export interface DownloadState {
   initialText: string
@@ -135,12 +138,22 @@ const getContent = (
 
 export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
   const theme = useTheme()
+  console.log(!!(getActiveUserData()?.downloads > 3))
   const [title, desc, howTitle, steps, tutorial] = getContent(activeTab)
+  const [showFrequentBanner, setShowFrequentBanner] = useState<boolean>(
+    isActive(getActiveUserData())
+  )
+  console.log(showFrequentBanner)
   return (
     <>
       <Layout>
         <SEO title={title} description={desc} />
         <Section style={{ backgroundColor: theme.sky }}>
+          {showFrequentBanner ? (
+            <FrequentUserBanner close={setShowFrequentBanner} />
+          ) : (
+            ''
+          )}
           <Container>
             <Columns>
               <Columns.Column size={12}>
