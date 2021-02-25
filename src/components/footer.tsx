@@ -22,7 +22,10 @@ const _Footer = () => {
             <Columns>
               {links}
 
-              <Columns.Column>© {new Date().getFullYear()}</Columns.Column>
+              <Columns.Column style={{ color: 'rgb(172, 172, 172)' }}>
+                Made with ❤️ by{' '}
+                <Link to="https://twitter.com/zackinsomnia">@zackinsomnia</Link>
+              </Columns.Column>
             </Columns>
           </Container>
         </Footer>

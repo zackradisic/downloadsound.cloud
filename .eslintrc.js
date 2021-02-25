@@ -17,7 +17,8 @@ module.exports = {
   globals: {
     __PATH_PREFIX__: true,
     __PREFIX_PATHS__: true,
-    rootPath: true
+    rootPath: true,
+    JSX: true
   },
   rules: {
     indent: ['error', 2],

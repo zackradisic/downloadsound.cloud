@@ -11,3 +11,7 @@ export const isURL = testRegex(urlRegexp)
 export const isMobileURL = testRegex(mobileUrlRegex)
 export const isFirebaseURL = testRegex(firebaseUrlRegex)
 export const isPlaylistURL = testRegex(playlistRegexp)
+
+export const isClientSide = (func: Function) => {
+  if (typeof window !== 'undefined') return func()
+}

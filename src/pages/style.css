@@ -1,5 +1,14 @@
 body {
   transition: 0.2s all ease-in-out;
+  height: 100vh;
+}
+
+#___gatsby,#gatsby-focus-wrapper, #gatsby-focus-wrapper > * {
+  height: 100vh;
+}
+
+#gatsby-focus-wrapper > * {
+  background-color: #181818;
 }
 
 .tab-link {

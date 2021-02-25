@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Link, navigate } from 'gatsby'
 import React, { useEffect, useState } from 'react'
 import Img from 'gatsby-image'
@@ -18,6 +19,11 @@ import gtag from '../lib/gtag'
 import getProgressHint from '../lib/progress'
 import TrackList from './track-list'
 import { isFirebaseURL, isURL } from '../lib/util'
+import {
+  downloadCountKey,
+  getActiveUserData,
+  setLocalStorageItem
+} from '../lib/active-user'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -407,6 +413,8 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
       setErr('That is not a playlist URL.')
       return
     }
+    const { downloads } = getActiveUserData()
+    setLocalStorageItem(downloadCountKey, downloads + 1)
     if (activeTab === DownloadTypes.Track) {
       setLoading(true)
       try {
