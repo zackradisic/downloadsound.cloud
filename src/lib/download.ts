@@ -7,17 +7,16 @@ import { Parser } from 'm3u8-parser'
 import React from 'react'
 
 interface DownloadedTrack {
-    blob: Blob,
-    fileName: string,
-
+  blob: Blob
+  fileName: string
 }
 
 export const downloadFile = async (link: string, filename: string) => {
   if (typeof window !== 'undefined') {
     if (!link.includes('.m3u8')) {
       fetch(link)
-        .then(resp => resp.blob())
-        .then(blob => {
+        .then((resp) => resp.blob())
+        .then((blob) => {
           const URL = window.URL || window.webkitURL
           const url = URL.createObjectURL(blob)
           const a = document.createElement('a')
@@ -29,7 +28,7 @@ export const downloadFile = async (link: string, filename: string) => {
           a.click()
           window.URL.revokeObjectURL(url)
         })
-        .catch(err => console.log(err))
+        .catch((err) => console.log(err))
     } else {
       try {
         const output = await downloadM3U8(link)
@@ -41,16 +40,24 @@ export const downloadFile = async (link: string, filename: string) => {
   }
 }
 
-export const downloadPlaylist = async (title: string, tracks: PlaylistTrack[], setProgress?: React.Dispatch<React.SetStateAction<number>>) => {
-  return downloadByGroup(setProgress, 5, ...tracks).then(downloaded => exportZip(title, ...downloaded))
+export const downloadPlaylist = async (
+  title: string,
+  tracks: PlaylistTrack[],
+  setProgress?: React.Dispatch<React.SetStateAction<number>>
+) => {
+  return downloadByGroup(setProgress, 5, ...tracks).then((downloaded) =>
+    exportZip(title, ...downloaded)
+  )
 }
 
 const downloadPlaylistTrack = (track: PlaylistTrack) => {
-  return fetch(track.url).then(resp => resp.blob()).then(blob => ({ blob, fileName: track.title } as DownloadedTrack))
+  return fetch(track.url)
+    .then((resp) => resp.blob())
+    .then((blob) => ({ blob, fileName: track.title } as DownloadedTrack))
 }
 
 interface M3U8Segment {
-    uri: string
+  uri: string
 }
 
 const downloadM3U8 = async (link: string) => {
@@ -58,8 +65,8 @@ const downloadM3U8 = async (link: string) => {
   const { data } = await axios.get(link)
   parser.push(data)
   parser.end()
-  const urls = parser.manifest.segments.map(segment => segment.uri)
-  const promises = urls.map(async url => {
+  const urls = parser.manifest.segments.map((segment) => segment.uri)
+  const promises = urls.map(async (url) => {
     const res = await axios.get(url, {
       responseType: 'blob',
       headers: {
@@ -72,7 +79,11 @@ const downloadM3U8 = async (link: string) => {
   return new Blob(buffers)
 }
 
-const downloadByGroup = (setProgress: React.Dispatch<React.SetStateAction<number>> | undefined, concurrency = 10, ...tracks: PlaylistTrack[]) => {
+const downloadByGroup = (
+  setProgress: React.Dispatch<React.SetStateAction<number>> | undefined,
+  concurrency = 10,
+  ...tracks: PlaylistTrack[]
+) => {
   let count = 0
   return _Promise.map(
     tracks,
@@ -103,16 +114,20 @@ const exportZip = (filename: string, ...tracks: DownloadedTrack[]) => {
     return new Promise((resolve, reject) => {
       const zip = JsZip()
       tracks.forEach((track, _) => {
-        const trackName = window.navigator.platform.includes('Mac') ? `${track.fileName.replace('/', ':')}.mp3` : `${track.fileName.replace('/', '∕')}.mp3`
+        const trackName = window.navigator.platform.includes('Mac')
+          ? `${track.fileName.replace('/', ':')}.mp3`
+          : `${track.fileName.replace('/', '∕')}.mp3`
         zip.file(trackName, track.blob, {
           createFolders: false
         })
       })
-      zip.generateAsync({ type: 'blob' }).then(zipFile => {
-        const fileName = `${filename}.zip`
-        return resolve(FileSaver.saveAs(zipFile, fileName))
-      })
-        .catch(err => reject(err))
+      zip
+        .generateAsync({ type: 'blob' })
+        .then((zipFile) => {
+          const fileName = `${filename}.zip`
+          return resolve(FileSaver.saveAs(zipFile, fileName))
+        })
+        .catch((err) => reject(err))
     })
   }
 }

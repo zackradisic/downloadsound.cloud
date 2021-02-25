@@ -9,9 +9,11 @@ import useTheme from '../hooks/theme'
 
 const _Footer = () => {
   const theme = useTheme()
-  const links = ['ABOUT', 'CONTACT', 'PRIVACY POLICY'].map(link => <Columns.Column key={`link-${link}`}>
-    <Link to={'/' + link.toLowerCase().replace(' ', '-')}>{link}</Link>
-  </Columns.Column>)
+  const links = ['ABOUT', 'CONTACT', 'PRIVACY POLICY'].map((link) => (
+    <Columns.Column key={`link-${link}`}>
+      <Link to={'/' + link.toLowerCase().replace(' ', '-')}>{link}</Link>
+    </Columns.Column>
+  ))
   return (
     <Hero className="z-index-1000">
       <Hero.Footer style={{ backgroundColor: theme.containerBackground }}>
@@ -20,10 +22,7 @@ const _Footer = () => {
             <Columns>
               {links}
 
-              <Columns.Column>
-          © {new Date().getFullYear()}
-              </Columns.Column>
-
+              <Columns.Column>© {new Date().getFullYear()}</Columns.Column>
             </Columns>
           </Container>
         </Footer>

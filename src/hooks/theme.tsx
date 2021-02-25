@@ -1,14 +1,13 @@
-
 interface Theme {
-    sky: string,
-    containerTitle: string,
-    containerBackground: string,
-    title: string,
-    subTitle: string,
-    textRegular: string,
-    textHint: string,
-    containerText: string,
-    boldText: string,
+  sky: string
+  containerTitle: string
+  containerBackground: string
+  title: string
+  subTitle: string
+  textRegular: string
+  textHint: string
+  containerText: string
+  boldText: string
 }
 
 const lightTheme: Theme = {

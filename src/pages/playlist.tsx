@@ -6,9 +6,7 @@ import { DownloadPage, DownloadState } from './_download'
 import { WindowLocation } from '@reach/router'
 
 const PlaylistDownloadPage = () => {
-  return (
-    <DownloadPage activeTab={DownloadTypes.Playlist}/>
-  )
+  return <DownloadPage activeTab={DownloadTypes.Playlist} />
 }
 
 export default PlaylistDownloadPage

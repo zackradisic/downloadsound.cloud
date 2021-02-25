@@ -32,44 +32,47 @@ const invalidLinks = [
 ]
 
 export enum DownloadTypes {
-    Track = 'track',
-    Playlist = 'playlist',
-    Likes = 'likes'
+  Track = 'track',
+  Playlist = 'playlist',
+  Likes = 'likes'
 }
 
 interface DownloaderProps {
-    activeTab: DownloadTypes,
+  activeTab: DownloadTypes
 }
 
 interface DownloaderTabsProps {
-    activeTab: DownloadTypes,
+  activeTab: DownloadTypes
 }
 
 interface DownloaderInputBarProps {
-    text: string,
-    setText: React.Dispatch<React.SetStateAction<string>>,
-    submit: (text: string) => Promise<void>,
-    activeTab: DownloadTypes,
-    isLoading: boolean,
-    hasDownloaded: boolean,
-    hasMedia: boolean
+  text: string
+  setText: React.Dispatch<React.SetStateAction<string>>
+  submit: (text: string) => Promise<void>
+  activeTab: DownloadTypes
+  isLoading: boolean
+  hasDownloaded: boolean
+  hasMedia: boolean
 }
 
 interface DownloaderMediaInfoProps<T extends Track | Playlist> {
-  media: T,
-  dlFunc: dlFunc,
-  downloading: boolean,
-  progress: number,
+  media: T
+  dlFunc: dlFunc
+  downloading: boolean
+  progress: number
   share: () => void
 }
 
 const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
-  const tabs = Object.keys(DownloadTypes).map(key => {
+  const tabs = Object.keys(DownloadTypes).map((key) => {
     return (
-      <Link key={`tab-link-${key}`} to={`/${DownloadTypes[key]}`} style={{
-        fontWeight: DownloadTypes[key] === activeTab ? 600 : 400,
-        color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9'
-      }}>
+      <Link
+        key={`tab-link-${key}`}
+        to={`/${DownloadTypes[key]}`}
+        style={{
+          fontWeight: DownloadTypes[key] === activeTab ? 600 : 400,
+          color: DownloadTypes[key] === activeTab ? '#FF3300' : '#B9B9B9'
+        }}>
         {DownloadTypes[key].toUpperCase()}
       </Link>
     )
@@ -78,15 +81,17 @@ const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
   return (
     <Columns className="is-mobile">
       <Columns.Column className="is-full-mobile is-two-third-tablet is-one-third-desktop">
-        <div className="has-text-left tab-link" style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          overflowX: 'scroll',
+        <div
+          className="has-text-left tab-link"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            overflowX: 'scroll',
 
-          letterSpacing: '0.3rem'
-        }}>
+            letterSpacing: '0.3rem'
+          }}>
           {tabs}
         </div>
       </Columns.Column>
@@ -94,7 +99,15 @@ const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
   )
 }
 
-const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, text, setText, submit }: DownloaderInputBarProps) => {
+const DownloaderInputBar = ({
+  hasMedia,
+  hasDownloaded,
+  isLoading,
+  activeTab,
+  text,
+  setText,
+  submit
+}: DownloaderInputBarProps) => {
   const theme = useTheme()
   const [color, setColor] = useState<string>('is-primary')
   const matches = useMediaQuery('only screen and (max-width: 768px)')
@@ -110,7 +123,11 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
         if (u.pathname.indexOf('/discover/sets/personalized-tracks::') === 0) {
           return DownloadTypes.Track
         }
-        return u.pathname.includes('/sets/') ? DownloadTypes.Playlist : activeTab === DownloadTypes.Playlist ? DownloadTypes.Track : activeTab
+        return u.pathname.includes('/sets/')
+          ? DownloadTypes.Playlist
+          : activeTab === DownloadTypes.Playlist
+          ? DownloadTypes.Track
+          : activeTab
       } catch (err) {
         return false
       }
@@ -170,24 +187,71 @@ const DownloaderInputBar = ({ hasMedia, hasDownloaded, isLoading, activeTab, tex
     submit(text)
   }
   return (
-    <div className="field has-addons" style={{ backgroundColor: theme.containerBackground }}>
+    <div
+      className="field has-addons"
+      style={{ backgroundColor: theme.containerBackground }}>
       <div className="control is-expanded">
-        <input id="download-input" style={{ borderRadius: borderRadius, backgroundColor: theme.containerBackground, color: theme.textRegular }} disabled={hasMedia} value={text} onPaste={onPaste} onChange={onChange} className={'input ' + size + ' ' + color} type="text" placeholder={placeholder} />
+        <input
+          id="download-input"
+          style={{
+            borderRadius: borderRadius,
+            backgroundColor: theme.containerBackground,
+            color: theme.textRegular
+          }}
+          disabled={hasMedia}
+          value={text}
+          onPaste={onPaste}
+          onChange={onChange}
+          className={'input ' + size + ' ' + color}
+          type="text"
+          placeholder={placeholder}
+        />
       </div>
       <div className="control">
-        { !hasMedia
-          ? <a onClick={submitWrapper} className={`button is-primary ${size}`} style={{ fontWeight: 500, borderRadius: borderRadius, marginLeft: marginLeft, boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+        {!hasMedia ? (
+          <a
+            onClick={submitWrapper}
+            className={`button is-primary ${size}`}
+            style={{
+              fontWeight: 500,
+              borderRadius: borderRadius,
+              marginLeft: marginLeft,
+              boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+            }}>
             {!isLoading ? 'Download' : ''}
-            <BeatLoader loading={isLoading} size={8} color={theme.containerBackground}/>
-          </a> : <Link to="">
-            <a onClick={submitWrapper} className={`button is-primary ${size}`} style={{ fontWeight: 500, borderRadius: borderRadius, marginLeft: marginLeft, boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>Download another</a> </Link>}
-
+            <BeatLoader
+              loading={isLoading}
+              size={8}
+              color={theme.containerBackground}
+            />
+          </a>
+        ) : (
+          <Link to="">
+            <a
+              onClick={submitWrapper}
+              className={`button is-primary ${size}`}
+              style={{
+                fontWeight: 500,
+                borderRadius: borderRadius,
+                marginLeft: marginLeft,
+                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+              }}>
+              Download another
+            </a>{' '}
+          </Link>
+        )}
       </div>
     </div>
   )
 }
 
-const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, dlFunc, media, progress }: DownloaderMediaInfoProps<T>) => {
+const DownloaderMediaInfo = <T extends Track | Playlist>({
+  share,
+  downloading,
+  dlFunc,
+  media,
+  progress
+}: DownloaderMediaInfoProps<T>) => {
   const theme = useTheme()
   const isTrack = !(media as Playlist).tracks
   const matches = useMediaQuery('only screen and (max-width: 768px)')
@@ -200,42 +264,101 @@ const DownloaderMediaInfo = <T extends Track | Playlist>({ share, downloading, d
 
   if (!isTrack) {
     if ((media as Playlist).copyrightedTracks) {
-      copyrightedTracks = (media as Playlist).copyrightedTracks.map(title => `"${title}"`).join(', ')
+      copyrightedTracks = (media as Playlist).copyrightedTracks
+        .map((title) => `"${title}"`)
+        .join(', ')
     }
   }
 
   return (
     <Columns>
-      <Columns.Column size={4} >
-        <Image size="square" src={media.imageURL} style={{ borderRadius: '10px' }}/>
+      <Columns.Column size={4}>
+        <Image
+          size="square"
+          src={media.imageURL}
+          style={{ borderRadius: '10px' }}
+        />
       </Columns.Column>
       <Columns.Column className="media-info" style={{ height: '100%' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 600, color: theme.containerTitle }}>
+          <h1
+            style={{
+              fontSize: '24px',
+              fontWeight: 600,
+              color: theme.containerTitle
+            }}>
             {media.title}
-            {isTrack ? '' : <p style={{ marginLeft: '1rem', color: theme.textHint, display: 'inline', fontWeight: 400, fontSize: '1rem' }}>{(media as Playlist).tracks.length} tracks</p>}
+            {isTrack ? (
+              ''
+            ) : (
+              <p
+                style={{
+                  marginLeft: '1rem',
+                  color: theme.textHint,
+                  display: 'inline',
+                  fontWeight: 400,
+                  fontSize: '1rem'
+                }}>
+                {(media as Playlist).tracks.length} tracks
+              </p>
+            )}
           </h1>
         </div>
         <p style={{ color: theme.textRegular }}>by {media.author.username}</p>
-        <a onClick={onClick} className="button is-primary" style={{ fontWeight: 500, bottom: 0, marginTop: '3rem', borderRadius: borderRadius }}>
-          {downloading ? <BeatLoader loading={downloading} size={8} color="white"/> : 'Download'}
+        <a
+          onClick={onClick}
+          className="button is-primary"
+          style={{
+            fontWeight: 500,
+            bottom: 0,
+            marginTop: '3rem',
+            borderRadius: borderRadius
+          }}>
+          {downloading ? (
+            <BeatLoader loading={downloading} size={8} color="white" />
+          ) : (
+            'Download'
+          )}
         </a>
 
-        <a onClick={share} className="button is-primary is-outlined" style={{ marginLeft: '1.5rem', fontWeight: 500, bottom: 0, marginTop: '3rem', borderRadius: borderRadius }}>
+        <a
+          onClick={share}
+          className="button is-primary is-outlined"
+          style={{
+            marginLeft: '1.5rem',
+            fontWeight: 500,
+            bottom: 0,
+            marginTop: '3rem',
+            borderRadius: borderRadius
+          }}>
           Share
         </a>
 
-        {isTrack ? '' : (
+        {isTrack ? (
+          ''
+        ) : (
           <>
-            <Progress style={{ marginTop: '3rem' }} className="is-primary" max={1} value={progress} size="small" />
-            <p style={{ color: theme.textRegular }}>{getProgressHint(progress)}</p>
+            <Progress
+              style={{ marginTop: '3rem' }}
+              className="is-primary"
+              max={1}
+              value={progress}
+              size="small"
+            />
+            <p style={{ color: theme.textRegular }}>
+              {getProgressHint(progress)}
+            </p>
           </>
         )}
 
-        {
-          copyrightedTracks ? <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{'The following tracks will not be downloaded because of copyright: ' + copyrightedTracks}</p> : ''
-        }
-
+        {copyrightedTracks ? (
+          <p style={{ color: '#ff0a3b', fontWeight: 600 }}>
+            {'The following tracks will not be downloaded because of copyright: ' +
+              copyrightedTracks}
+          </p>
+        ) : (
+          ''
+        )}
       </Columns.Column>
       <Toaster />
     </Columns>
@@ -268,7 +391,9 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
       event_label: 'Share Link Click',
       value: `${activeTab}/${text}`
     })
-    navigator.clipboard.writeText(`${window.location.origin}/${activeTab}?url=${text}`)
+    navigator.clipboard.writeText(
+      `${window.location.origin}/${activeTab}?url=${text}`
+    )
     toast('Share link copied to clipboard!')
   }
 
@@ -306,27 +431,27 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         console.log(err)
         if (err.response) {
           switch (err.response.status) {
-          case 408:
-            setErr('Request timedout, please try again.')
-            break
-          case 422:
-            setErr('URL is invalid')
-            break
-          case 404:
-            setErr('Could not find that playlist/track.')
-            break
-          case 400:
-            if (err.response.data) {
-              if (err.response.data.err) {
-                setErr(err.response.data.err)
-                break
+            case 408:
+              setErr('Request timedout, please try again.')
+              break
+            case 422:
+              setErr('URL is invalid')
+              break
+            case 404:
+              setErr('Could not find that playlist/track.')
+              break
+            case 400:
+              if (err.response.data) {
+                if (err.response.data.err) {
+                  setErr(err.response.data.err)
+                  break
+                }
               }
-            }
-            setErr('An internal server error occured, please try again.')
-            break
-          default:
-            setErr('An internal server error occured, please try again.')
-            break
+              setErr('An internal server error occured, please try again.')
+              break
+            default:
+              setErr('An internal server error occured, please try again.')
+              break
           }
         } else {
           setErr('An unknown error occured, please try again.')
@@ -336,10 +461,27 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     } else {
       setLoading(true)
       try {
-        const { url, title, tracks, author, copyrightedTracks, imageURL } = await getPlaylistLinks(text, activeTab === DownloadTypes.Likes)
-        setMedia({ url, title, tracks, author, copyrightedTracks, imageURL } as Playlist)
+        const {
+          url,
+          title,
+          tracks,
+          author,
+          copyrightedTracks,
+          imageURL
+        } = await getPlaylistLinks(text, activeTab === DownloadTypes.Likes)
+        setMedia({
+          url,
+          title,
+          tracks,
+          author,
+          copyrightedTracks,
+          imageURL
+        } as Playlist)
         const dlFunc = async () => {
-          const setProgressWrapper = (prog: number) => { console.log(prog); setProgress(prog) }
+          const setProgressWrapper = (prog: number) => {
+            console.log(prog)
+            setProgress(prog)
+          }
           setDownloading(true)
           try {
             await downloadPlaylist(title, tracks, setProgressWrapper)
@@ -356,37 +498,39 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         console.log(err)
         if (err.response) {
           switch (err.response.status) {
-          case 408:
-            setErr('Request timedout, please try again.')
-            break
-          case 422:
-            setErr('URL is invalid.')
-            break
-          case 403:
-            setErr('That playlist has too many tracks (maximum is 100).')
-            break
-          case 404:
-            setErr("Could not find that playlist/track. Make sure it's a valid link to a track/playlist.")
-            break
-          case 400:
-            if (err.response.data) {
-              if (err.response.data.err) {
+            case 408:
+              setErr('Request timedout, please try again.')
+              break
+            case 422:
+              setErr('URL is invalid.')
+              break
+            case 403:
+              setErr('That playlist has too many tracks (maximum is 100).')
+              break
+            case 404:
+              setErr(
+                "Could not find that playlist/track. Make sure it's a valid link to a track/playlist."
+              )
+              break
+            case 400:
+              if (err.response.data) {
+                if (err.response.data.err) {
+                  setErr(err.response.data.err)
+                  break
+                }
+              }
+              setErr('An internal server error occured, please try again.')
+              break
+            case 409:
+              if (err.response.data) {
                 setErr(err.response.data.err)
                 break
               }
-            }
-            setErr('An internal server error occured, please try again.')
-            break
-          case 409:
-            if (err.response.data) {
-              setErr(err.response.data.err)
+              setErr('An internal server error occured, please try again.')
               break
-            }
-            setErr('An internal server error occured, please try again.')
-            break
-          default:
-            setErr('An internal server error occured, please try again.')
-            break
+            default:
+              setErr('An internal server error occured, please try again.')
+              break
           }
         } else {
           setErr('An unknown error occured, please try again.')
@@ -399,10 +543,17 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   useEffect(() => {
     if (activeTab !== DownloadTypes.Track) {
       const dlFunc = async () => {
-        const setProgressWrapper = (prog: number) => { console.log(prog); setProgress(prog) }
+        const setProgressWrapper = (prog: number) => {
+          console.log(prog)
+          setProgress(prog)
+        }
         setDownloading(true)
         try {
-          await downloadPlaylist(media.title, (media as Playlist).tracks, setProgressWrapper)
+          await downloadPlaylist(
+            media.title,
+            (media as Playlist).tracks,
+            setProgressWrapper
+          )
         } catch (err) {
           console.log(err)
           setErr('Failed to download, try refreshing the page.')
@@ -415,23 +566,67 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     }
   }, [media])
   return (
-    <div style={{ backgroundColor: theme.containerBackground, padding: '1.5rem 2.5rem', borderRadius: '10px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+    <div
+      style={{
+        backgroundColor: theme.containerBackground,
+        padding: '1.5rem 2.5rem',
+        borderRadius: '10px',
+        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+      }}>
       <Columns>
         <Columns.Column size={12}>
-          <DownloaderTabs activeTab={activeTab}/>
+          <DownloaderTabs activeTab={activeTab} />
         </Columns.Column>
 
         <Columns.Column size={12}>
-          <DownloaderInputBar hasMedia={!!media} hasDownloaded={downloaded} isLoading={loading} activeTab={activeTab} submit={submit} text={text} setText={setText} />
+          <DownloaderInputBar
+            hasMedia={!!media}
+            hasDownloaded={downloaded}
+            isLoading={loading}
+            activeTab={activeTab}
+            submit={submit}
+            text={text}
+            setText={setText}
+          />
         </Columns.Column>
 
-        {media ? '' : <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p></Columns.Column>}
+        {media ? (
+          ''
+        ) : (
+          <Columns.Column size={12}>
+            <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p>
+          </Columns.Column>
+        )}
 
-        {media ? <Columns.Column size={12}><DownloaderMediaInfo share={share} progress={progress} downloading={downloading} dlFunc={download} media={media} /> </Columns.Column> : ''}
+        {media ? (
+          <Columns.Column size={12}>
+            <DownloaderMediaInfo
+              share={share}
+              progress={progress}
+              downloading={downloading}
+              dlFunc={download}
+              media={media}
+            />{' '}
+          </Columns.Column>
+        ) : (
+          ''
+        )}
 
-        {media ? <Columns.Column size={12}><p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p> </Columns.Column> : ''}
+        {media ? (
+          <Columns.Column size={12}>
+            <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p>{' '}
+          </Columns.Column>
+        ) : (
+          ''
+        )}
 
-        {media && activeTab !== DownloadTypes.Track ? <Columns.Column size={12}><TrackList media={media as Playlist} setMedia={setMedia} /></Columns.Column> : ''}
+        {media && activeTab !== DownloadTypes.Track ? (
+          <Columns.Column size={12}>
+            <TrackList media={media as Playlist} setMedia={setMedia} />
+          </Columns.Column>
+        ) : (
+          ''
+        )}
       </Columns>
     </div>
   )

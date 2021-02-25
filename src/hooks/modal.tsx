@@ -11,17 +11,23 @@ const useModal = (): [() => JSX.Element, () => void] => {
 
   const modal = () => {
     return (
-      <_Modal show={show} onClose={close} showClose={true} closeOnEsc={true} closeOnBlur={true}>
+      <_Modal
+        show={show}
+        onClose={close}
+        showClose={true}
+        closeOnEsc={true}
+        closeOnBlur={true}>
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">Share</p>
-            <button className="delete" aria-label="close" onClick={close}></button>
+            <button
+              className="delete"
+              aria-label="close"
+              onClick={close}></button>
           </header>
-          <section className="modal-card-body">
-          </section>
-          <footer className="modal-card-foot">
-          </footer>
+          <section className="modal-card-body"></section>
+          <footer className="modal-card-foot"></footer>
         </div>
       </_Modal>
     )
