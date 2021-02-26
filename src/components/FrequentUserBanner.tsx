@@ -35,14 +35,16 @@ const FrequentUserBanner = ({ close }: Props) => {
         }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <h1 style={{ flex: '1 1 0%' }}>
-            Hey 👋! We notice you&apos;re an active user. We&apos;d love to chat
-            with you and get feedback about the site!
+            Hey 👋! We notice you&apos;re an active user. We&apos;d love to get
+            your feedback on the site and chat with you!
           </h1>
           <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
             <Button color="primary" style={{ marginRight: '1rem' }}>
-              <Link to="/contact" style={{ color: 'white' }}>
-                Chat with us
-              </Link>
+              <a
+                href="https://zt0ppvizlob.typeform.com/to/uecxISwv"
+                style={{ color: 'white' }}>
+                Take our survey
+              </a>
             </Button>
             <a
               href="https://discord.gg/39bEkYuzrN"
