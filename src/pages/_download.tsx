@@ -85,7 +85,7 @@ const getContent = (
         </li>,
         <li>
           Paste the URL of the track in the input bar in the &apos;
-          <b style={{ color: theme.boldText }}>Track</b>&apos;tab
+          <b style={{ color: theme.boldText }}>Track</b>&apos; tab
         </li>,
         <li>
           Click the &apos;<b style={{ color: theme.boldText }}>Download</b>
