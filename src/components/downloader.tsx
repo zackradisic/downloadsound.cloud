@@ -405,11 +405,15 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
   const submit = async (text: string) => {
     if (loading || downloaded) return
-    if (!isURL(text)) {
+    if (!isURL(text) && !isFirebaseURL(text)) {
       setErr('That URL is invalid, please try another one.')
       return
     }
-    if (!text.includes('/sets/') && activeTab === DownloadTypes.Playlist) {
+    if (
+      !text.includes('/sets/') &&
+      activeTab === DownloadTypes.Playlist &&
+      !isFirebaseURL(text)
+    ) {
       setErr('That is not a playlist URL.')
       return
     }
