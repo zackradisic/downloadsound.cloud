@@ -7,7 +7,13 @@ import Columns from 'react-bulma-components/lib/components/columns'
 import Image from 'react-bulma-components/lib/components/image'
 import Progress from 'react-bulma-components/lib/components/progress'
 
-import { getPlaylistLinks, getTrackLink, Playlist, Track } from '../api'
+import {
+  getPlaylistLinks,
+  getTrackLink,
+  handleDownloadErr,
+  Playlist,
+  Track
+} from '../api'
 
 import BeatLoader from 'react-spinners/BeatLoader'
 
@@ -24,6 +30,7 @@ import {
   getActiveUserData,
   setLocalStorageItem
 } from '../lib/active-user'
+import share from '../lib/share'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -391,18 +398,6 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
   const [progress, setProgress] = useState<number>(0)
   const theme = useTheme()
 
-  const share = () => {
-    gtag('event', 'share', {
-      event_category: 'Share',
-      event_label: 'Share Link Click',
-      value: `${activeTab}/${text}`
-    })
-    navigator.clipboard.writeText(
-      `${window.location.origin}/${activeTab}?url=${text}`
-    )
-    toast('Share link copied to clipboard!')
-  }
-
   const submit = async (text: string) => {
     if (loading || downloaded) return
     if (!isURL(text) && !isFirebaseURL(text)) {
@@ -419,8 +414,8 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
     }
     const { downloads } = getActiveUserData()
     setLocalStorageItem(downloadCountKey, downloads + 1)
+    setLoading(true)
     if (activeTab === DownloadTypes.Track) {
-      setLoading(true)
       try {
         const { url, title, author, imageURL } = await getTrackLink(text)
         setMedia({ url, title, author, imageURL } as Track)
@@ -441,114 +436,49 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         setDownload({ dlFunc })
       } catch (err) {
         console.log(err)
-        if (err.response) {
-          switch (err.response.status) {
-            case 408:
-              setErr('Request timedout, please try again.')
-              break
-            case 422:
-              setErr('URL is invalid')
-              break
-            case 404:
-              setErr('Could not find that playlist/track.')
-              break
-            case 400:
-              if (err.response.data) {
-                if (err.response.data.err) {
-                  setErr(err.response.data.err)
-                  break
-                }
-              }
-              setErr('An internal server error occured, please try again.')
-              break
-            default:
-              setErr('An internal server error occured, please try again.')
-              break
-          }
-        } else {
-          setErr('An unknown error occured, please try again.')
-        }
+        handleDownloadErr(activeTab, err, setErr)
         setLoading(false)
       }
-    } else {
-      setLoading(true)
-      try {
-        const {
-          url,
-          title,
-          tracks,
-          author,
-          copyrightedTracks,
-          imageURL
-        } = await getPlaylistLinks(text, activeTab === DownloadTypes.Likes)
-        setMedia({
-          url,
-          title,
-          tracks,
-          author,
-          copyrightedTracks,
-          imageURL
-        } as Playlist)
-        const dlFunc = async () => {
-          const setProgressWrapper = (prog: number) => {
-            console.log(prog)
-            setProgress(prog)
-          }
-          setDownloading(true)
-          try {
-            await downloadPlaylist(title, tracks, setProgressWrapper)
-          } catch (err) {
-            console.log(err)
-            setErr('Failed to download, try refreshing the page.')
-          }
-          setDownloaded(true)
-          setDownloading(false)
+      return
+    }
+    try {
+      const {
+        url,
+        title,
+        tracks,
+        author,
+        copyrightedTracks,
+        imageURL
+      } = await getPlaylistLinks(text, activeTab === DownloadTypes.Likes)
+      setMedia({
+        url,
+        title,
+        tracks,
+        author,
+        copyrightedTracks,
+        imageURL
+      } as Playlist)
+      const dlFunc = async () => {
+        const setProgressWrapper = (prog: number) => {
+          console.log(prog)
+          setProgress(prog)
         }
-        setLoading(false)
-        setDownload({ dlFunc })
-      } catch (err) {
-        console.log(err)
-        if (err.response) {
-          switch (err.response.status) {
-            case 408:
-              setErr('Request timedout, please try again.')
-              break
-            case 422:
-              setErr('URL is invalid.')
-              break
-            case 403:
-              setErr('That playlist has too many tracks (maximum is 100).')
-              break
-            case 404:
-              setErr(
-                "Could not find that playlist/track. Make sure it's a valid link to a track/playlist."
-              )
-              break
-            case 400:
-              if (err.response.data) {
-                if (err.response.data.err) {
-                  setErr(err.response.data.err)
-                  break
-                }
-              }
-              setErr('An internal server error occured, please try again.')
-              break
-            case 409:
-              if (err.response.data) {
-                setErr(err.response.data.err)
-                break
-              }
-              setErr('An internal server error occured, please try again.')
-              break
-            default:
-              setErr('An internal server error occured, please try again.')
-              break
-          }
-        } else {
-          setErr('An unknown error occured, please try again.')
+        setDownloading(true)
+        try {
+          await downloadPlaylist(title, tracks, setProgressWrapper)
+        } catch (err) {
+          console.log(err)
+          setErr('Failed to download, try refreshing the page.')
         }
-        setLoading(false)
+        setDownloaded(true)
+        setDownloading(false)
       }
+      setLoading(false)
+      setDownload({ dlFunc })
+    } catch (err) {
+      console.log(err)
+      handleDownloadErr(activeTab, err, setErr)
+      setLoading(false)
     }
   }
 
@@ -606,14 +536,16 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
           ''
         ) : (
           <Columns.Column size={12}>
-            <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p>
+            <p style={{ color: '#FF0D59', fontWeight: 400 }}>
+              {err} {err ? '😱' : ''}
+            </p>
           </Columns.Column>
         )}
 
         {media ? (
           <Columns.Column size={12}>
             <DownloaderMediaInfo
-              share={share}
+              share={() => share(activeTab, text)}
               progress={progress}
               downloading={downloading}
               dlFunc={download}
@@ -626,7 +558,9 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
         {media ? (
           <Columns.Column size={12}>
-            <p style={{ color: '#ff0a3b', fontWeight: 600 }}>{err}</p>{' '}
+            <p style={{ color: '#FF0D59', fontWeight: 400 }}>
+              {err} {err ? '😱' : ''}
+            </p>{' '}
           </Columns.Column>
         ) : (
           ''
