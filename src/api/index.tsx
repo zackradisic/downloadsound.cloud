@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import axios from 'axios'
+import toast from 'react-hot-toast'
 import { DownloadTypes } from '../components/downloader'
 
 export interface SoundcloudResource {
@@ -57,6 +58,18 @@ export const handleDownloadErr = (
     }
   } else {
     setErr('An unknown error occured, please try again.')
+  }
+}
+
+export const reportLink = async (link: string, tab: DownloadTypes) => {
+  try {
+    await api.post('/report', {
+      url: link,
+      downloadType: tab
+    })
+    toast('Link reported! Thanks 🤗')
+  } catch (err) {
+    toast.error('Something went wrong 😲')
   }
 }
 

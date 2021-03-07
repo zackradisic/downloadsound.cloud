@@ -12,6 +12,7 @@ import {
   getTrackLink,
   handleDownloadErr,
   Playlist,
+  reportLink,
   Track
 } from '../api'
 
@@ -31,6 +32,7 @@ import {
   setLocalStorageItem
 } from '../lib/active-user'
 import share from '../lib/share'
+import ReportLinkButton from './report-button'
 let downloadFile
 let downloadPlaylist
 if (typeof window !== 'undefined') {
@@ -481,7 +483,6 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
       setLoading(false)
     }
   }
-
   useEffect(() => {
     if (activeTab !== DownloadTypes.Track) {
       const dlFunc = async () => {
@@ -515,6 +516,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
         borderRadius: '10px',
         boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
       }}>
+      <Toaster />
       <Columns>
         <Columns.Column size={12}>
           <DownloaderTabs activeTab={activeTab} />
@@ -536,8 +538,22 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
           ''
         ) : (
           <Columns.Column size={12}>
-            <p style={{ color: '#FF0D59', fontWeight: 400 }}>
-              {err} {err ? '😱' : ''}
+            <p
+              style={{
+                color: '#FF0D59',
+                fontWeight: 400,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+              <span style={{ display: 'block' }}>
+                {err} {err ? '😱' : ''}{' '}
+              </span>
+              {err ? (
+                <ReportLinkButton link={text} activeTab={activeTab} />
+              ) : (
+                ''
+              )}
             </p>
           </Columns.Column>
         )}
