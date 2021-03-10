@@ -199,7 +199,7 @@ const DownloaderInputBar = ({
       event_label: `${activeTab} click`,
       value: text
     })
-    submit(text)
+    if (!hasMedia) submit(text)
   }
   return (
     <div
@@ -546,9 +546,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
                 flexDirection: 'row',
                 alignItems: 'center'
               }}>
-              <span style={{ display: 'block' }}>
-                {err} {err ? '😱' : ''}{' '}
-              </span>
+              <span style={{ display: 'block' }}>{err} </span>
               {err ? (
                 <ReportLinkButton link={text} activeTab={activeTab} />
               ) : (
@@ -574,9 +572,7 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
         {media ? (
           <Columns.Column size={12}>
-            <p style={{ color: '#FF0D59', fontWeight: 400 }}>
-              {err} {err ? '😱' : ''}
-            </p>{' '}
+            <p style={{ color: '#FF0D59', fontWeight: 400 }}>{err}</p>{' '}
           </Columns.Column>
         ) : (
           ''
