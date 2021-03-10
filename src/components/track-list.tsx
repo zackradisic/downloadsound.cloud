@@ -47,7 +47,12 @@ const TrackListPagination = ({
   }
   return (
     <div
-      style={{ color: '#545454', fontSize: '1.5rem', letterSpacing: '1.5rem' }}>
+      style={{
+        color: '#545454',
+        fontSize: '1.5rem',
+        letterSpacing: '1.5rem',
+        overflowWrap: 'anywhere'
+      }}>
       {p}
     </div>
   )
