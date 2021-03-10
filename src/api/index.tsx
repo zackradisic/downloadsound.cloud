@@ -2,6 +2,8 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { DownloadTypes } from '../components/downloader'
+import httpmoji from 'httpmoji'
+import emoji from './emoji'
 
 export interface SoundcloudResource {
   title: string
@@ -57,7 +59,7 @@ export const handleDownloadErr = (
         break
     }
   } else {
-    setErr('An unknown error occured, please try again.')
+    setErr('An unknown error occured, please try again. ' + emoji(500))
   }
 }
 
@@ -69,34 +71,37 @@ export const reportLink = async (link: string, tab: DownloadTypes) => {
     })
     toast('Link reported! Thanks 🤗')
   } catch (err) {
-    toast.error('Something went wrong 😲')
+    toast.error('Something went wrong ' + emoji(500))
   }
 }
 
 const handleTrackDownloadErr = (err: any, setErr: (value: string) => void) => {
+  let msg = ''
   switch (err.response.status) {
     case 408:
-      setErr('Request timedout, please try again.')
+      msg = 'Request timedout, please try again.'
       break
     case 422:
-      setErr('URL is invalid')
+      msg = 'URL is invalid'
       break
     case 404:
-      setErr('Could not find that playlist/track.')
+      msg = 'Could not find that playlist/track.'
       break
     case 400:
       if (err.response.data) {
         if (err.response.data.err) {
-          setErr(err.response.data.err)
+          msg = err.response.data.err
           break
         }
       }
-      setErr('An internal server error occured, please try again.')
+      msg = 'An internal server error occured, please try again.'
       break
     default:
-      setErr('An internal server error occured, please try again.')
+      msg = 'An internal server error occured, please try again.'
       break
   }
+
+  setErr(msg + ' ' + emoji(err.response.status))
 }
 const handlePlaylistDownloadErr = (
   err: any,
