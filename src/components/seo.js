@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet'
 import { useStaticQuery, graphql } from 'gatsby'
 import DownloadSoundCloudImg from '../images/downloadsound.cloud-og.png'
 
-function SEO({ description, lang, meta, title }) {
+function SEO ({ description, lang, meta, title }) {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -40,8 +40,11 @@ function SEO({ description, lang, meta, title }) {
         s0.parentNode.insertBefore(s1,s0);
       })();
     `
-    console.log(tawkto)
+    const skimlink = document.createElement('script')
+    skimlink.type = 'text/javascript'
+    skimlink.src = 'https://s.skimresources.com/js/186745X1657275.skimlinks.js'
     document.head.appendChild(tawkto)
+    document.body.appendChild(skimlink)
   }, [])
 
   const metaDescription = description || site.siteMetadata.description
