@@ -1,5 +1,5 @@
 /* eslint-disable indent */ // Weird prettier error occurs, sorry
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, PageProps } from 'gatsby'
 
 import Layout from '../components/layout'
@@ -143,8 +143,21 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
   const [showFrequentBanner, setShowFrequentBanner] = useState<boolean>(
     isActive(getActiveUserData())
   )
-  const [rand, _setRand] = useState<number>(Math.round(Math.random()))
-  console.log(showFrequentBanner)
+
+  const [rand, setRand] = useState<number>(Math.round(Math.random()))
+
+  useEffect(() => {
+    // For some reason Gatsby is not properly updating the href of the <a> tag,
+    // I suspect it's some SSG problem. This is a hacky solution for now.
+    const delay = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms))
+    const change = async () => {
+      await delay(100)
+
+      setRand(Math.round(Math.random()))
+    }
+    change()
+  }, [])
   return (
     <>
       <Layout>
@@ -186,46 +199,68 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
               </Columns.Column>
 
               <Columns.Column size={6} className="is-3">
-                <div
-                  style={{
-                    color: theme.containerText,
-                    backgroundColor: theme.containerBackground,
-                    padding: '1.5rem 2.5rem',
-                    borderRadius: '10px',
-                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
-                  }}>
-                  <h1
+                {rand ? (
+                  <div
                     style={{
-                      color: theme.containerTitle,
-                      fontSize: '24px',
-                      fontWeight: 600
+                      color: theme.containerText,
+                      backgroundColor: theme.containerBackground,
+                      padding: '1.5rem 2.5rem',
+                      borderRadius: '10px',
+                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
                     }}>
-                    {rand === 0 ? 'Browser Extension' : 'Playlist Manager'}
-                  </h1>
+                    <h1
+                      style={{
+                        color: theme.containerTitle,
+                        fontSize: '24px',
+                        fontWeight: 600
+                      }}>
+                      Browser Extension
+                    </h1>
 
-                  <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                    {rand === 0
-                      ? 'Want to download SoundCloud tracks and playlists while browsing soundcloud.com?'
-                      : 'Tired of tracks being mysteriously removed from your big playlist?'}
-                  </p>
+                    <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                      Want to download SoundCloud tracks and playlists while
+                      browsing soundcloud.com?
+                    </p>
 
-                  <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                    <a
-                      href={
-                        rand === 0
-                          ? 'https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0'
-                          : 'https://cloudcurate.downloadsound.cloud'
-                      }>
-                      {rand === 0
-                        ? 'Get our browser extension'
-                        : 'Try our playlist manager'}
-                    </a>
-                    ,{' '}
-                    {rand === 0
-                      ? 'which adds a download button to SoundCloud.'
-                      : 'which helps you keep track of and managage a big playlist with 100+ tracks.'}
-                  </p>
-                </div>
+                    <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                      <a href="https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0">
+                        Get our browser extension
+                      </a>
+                      , which adds a download button to SoundCloud.
+                    </p>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      color: theme.containerText,
+                      backgroundColor: theme.containerBackground,
+                      padding: '1.5rem 2.5rem',
+                      borderRadius: '10px',
+                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                    }}>
+                    <h1
+                      style={{
+                        color: theme.containerTitle,
+                        fontSize: '24px',
+                        fontWeight: 600
+                      }}>
+                      Playlist Manager
+                    </h1>
+
+                    <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                      Tired of tracks being mysteriously removed from your big
+                      playlist?
+                    </p>
+
+                    <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                      <a href="https://cloudcurate.downloadsound.cloud">
+                        Try our playlist manager
+                      </a>
+                      , which helps you keep track of and managage a big
+                      playlist with 100+ tracks.
+                    </p>
+                  </div>
+                )}
               </Columns.Column>
             </Columns>
           </Container>
