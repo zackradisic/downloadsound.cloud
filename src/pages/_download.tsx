@@ -1,5 +1,5 @@
 /* eslint-disable indent */ // Weird prettier error occurs, sorry
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link, PageProps } from 'gatsby'
 
 import Layout from '../components/layout'
@@ -143,6 +143,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
   const [showFrequentBanner, setShowFrequentBanner] = useState<boolean>(
     isActive(getActiveUserData())
   )
+  const [rand, _setRand] = useState<number>(Math.round(Math.random()))
   console.log(showFrequentBanner)
   return (
     <>
@@ -199,19 +200,30 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                       fontSize: '24px',
                       fontWeight: 600
                     }}>
-                    Browser Extension
+                    {rand === 0 ? 'Browser Extension' : 'Playlist Manager'}
                   </h1>
 
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                    Want to download SoundCloud tracks and playlists while
-                    browsing soundcloud.com?
+                    {rand === 0
+                      ? 'Want to download SoundCloud tracks and playlists while browsing soundcloud.com?'
+                      : 'Tired of tracks being mysteriously removed from your big playlist?'}
                   </p>
 
                   <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                    <a href="https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0">
-                      Get our browser extension
+                    <a
+                      href={
+                        rand === 0
+                          ? 'https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0'
+                          : 'https://cloudcurate.downloadsound.cloud'
+                      }>
+                      {rand === 0
+                        ? 'Get our browser extension'
+                        : 'Try our playlist manager'}
                     </a>
-                    , which adds a download button to SoundCloud.
+                    ,{' '}
+                    {rand === 0
+                      ? 'which adds a download button to SoundCloud.'
+                      : 'which helps you keep track of and managage a big playlist with 100+ tracks.'}
                   </p>
                 </div>
               </Columns.Column>
