@@ -223,7 +223,16 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                     </p>
 
                     <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                      <a href="https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0">
+                      <a
+                        onClick={(
+                          e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+                        ) => {
+                          e.preventDefault()
+                          window.location.replace(
+                            'https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0'
+                          )
+                        }}
+                        href="https://chrome.google.com/webstore/detail/downloadsoundcloud/bafobcnpeegipbakjfbffjkokofkncip?hl=en&authuser=0">
                         Get our browser extension
                       </a>
                       , which adds a download button to SoundCloud.
@@ -253,7 +262,16 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                     </p>
 
                     <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                      <a href="https://cloudcurate.downloadsound.cloud">
+                      <a
+                        onClick={(
+                          e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+                        ) => {
+                          e.preventDefault()
+                          window.location.replace(
+                            'https://cloudcurate.downloadsound.cloud'
+                          )
+                        }}
+                        href="https://cloudcurate.downloadsound.cloud">
                         Try our playlist manager
                       </a>
                       , which helps you keep track of and managage a big
