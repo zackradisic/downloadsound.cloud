@@ -268,10 +268,10 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                         ) => {
                           e.preventDefault()
                           window.location.replace(
-                            'https://cloudcurate.downloadsound.cloud'
+                            'https://app.downloadsound.cloud'
                           )
                         }}
-                        href="https://cloudcurate.downloadsound.cloud">
+                        href="https://app.downloadsound.cloud">
                         Try our playlist manager
                       </a>
                       , which helps you keep track of and managage a big

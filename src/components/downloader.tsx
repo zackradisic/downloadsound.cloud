@@ -546,9 +546,24 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
                 flexDirection: 'row',
                 alignItems: 'center'
               }}>
-              <span style={{ display: 'block' }}>{err} </span>
+              <span style={{ display: 'block' }}>
+                {err}{' '}
+                {err
+                  ? "If you're having trouble downloading a large amount of tracks, try using our desktop app"
+                  : ''}
+              </span>
               {err ? (
-                <ReportLinkButton link={text} activeTab={activeTab} />
+                <a
+                  href="https://app.downloadsound.cloud/"
+                  className={'button is-primary'}
+                  style={{
+                    fontWeight: 500,
+                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    display: 'block',
+                    marginLeft: '1rem'
+                  }}>
+                  Get app
+                </a>
               ) : (
                 ''
               )}
@@ -572,7 +587,32 @@ const Downloader = ({ activeTab }: DownloaderProps) => {
 
         {media ? (
           <Columns.Column size={12}>
-            <p style={{ color: '#FF0D59', fontWeight: 400 }}>{err}</p>{' '}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+              <p style={{ color: '#FF0D59', fontWeight: 400 }}>
+                {err}{' '}
+                {err
+                  ? "If you're downloading a large amount of tracks, try using our desktop app."
+                  : ''}
+              </p>{' '}
+              {err ? (
+                <a
+                  href="https://app.downloadsound.cloud/"
+                  className={'button is-primary'}
+                  style={{
+                    fontWeight: 500,
+                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    marginLeft: '1rem'
+                  }}>
+                  Get app
+                </a>
+              ) : (
+                ''
+              )}
+            </div>
           </Columns.Column>
         ) : (
           ''
