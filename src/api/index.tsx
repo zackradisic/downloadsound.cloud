@@ -1,9 +1,9 @@
 /* eslint-disable indent */
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { DownloadTypes } from '../components/downloader'
 import httpmoji from 'httpmoji'
 import emoji from './emoji'
+import { DownloadTypes } from '../types/downloadTypes'
 
 export interface SoundcloudResource {
   title: string

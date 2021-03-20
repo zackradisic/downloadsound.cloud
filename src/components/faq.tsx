@@ -1,8 +1,8 @@
 /* eslint-disable indent */
 import React, { useMemo } from 'react'
-import { DownloadTypes } from './downloader'
 import Columns from 'react-bulma-components/lib/components/columns'
 import useTheme from '../hooks/theme'
+import { DownloadTypes } from '../types/downloadTypes'
 
 interface Props {
   activeTab: DownloadTypes
@@ -124,7 +124,7 @@ const FAQ = ({ activeTab }: Props) => {
   const items = useMemo<JSX.Element[]>(
     () =>
       getContent(activeTab).map((content, idx) => (
-        <FAQItem key={'faq-item-idx'} content={content} />
+        <FAQItem key={`faq-item-${idx}`} content={content} />
       )),
     [activeTab]
   )

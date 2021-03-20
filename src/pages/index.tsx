@@ -1,5 +1,5 @@
 import React from 'react'
-import { DownloadTypes } from '../components/downloader'
+import { DownloadTypes } from '../types/downloadTypes'
 
 import './style.css'
 import { DownloadPage } from './_download'

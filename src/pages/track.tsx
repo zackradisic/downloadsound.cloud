@@ -1,10 +1,9 @@
 import React from 'react'
-import { DownloadTypes } from '../components/downloader'
 
 import './style.css'
-import { DownloadPage, DownloadState } from './_download'
+import { DownloadPage } from './_download'
 
-import { WindowLocation } from '@reach/router'
+import { DownloadTypes } from '../types/downloadTypes'
 
 const TrackDownloadPage = () => {
   return <DownloadPage activeTab={DownloadTypes.Track} />
