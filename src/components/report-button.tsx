@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { reportLink } from '../api'
-import { DownloadTypes } from './downloader'
+import { DownloadTypes } from '../types/downloadTypes'
 
 interface Props {
   link: string

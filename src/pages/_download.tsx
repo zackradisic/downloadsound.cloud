@@ -1,18 +1,14 @@
 /* eslint-disable indent */ // Weird prettier error occurs, sorry
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, PageProps } from 'gatsby'
+import React, { useEffect, useState } from 'react'
 
 import Layout from '../components/layout'
-import Image from '../components/image'
 import SEO from '../components/seo'
 
 import Columns from 'react-bulma-components/lib/components/columns'
 import Section from 'react-bulma-components/lib/components/section'
 import Container from 'react-bulma-components/lib/components/container'
-import Downloader, { DownloadTypes } from '../components/downloader'
+import Downloader from '../components/downloader'
 import Content from 'react-bulma-components/lib/components/content'
-
-import { useQueryParam, StringParam } from 'use-query-params'
 
 import { WindowLocation } from '@reach/router'
 
@@ -21,6 +17,8 @@ import useTheme from '../hooks/theme'
 import { getActiveUserData, isActive } from '../lib/active-user'
 import FrequentUserBanner from '../components/FrequentUserBanner'
 import FAQ from '../components/faq'
+import { TabContextProvider } from '../context/TabContext'
+import { DownloadTypes } from '../types/downloadTypes'
 
 export interface DownloadState {
   initialText: string
@@ -160,7 +158,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
     change()
   }, [])
   return (
-    <>
+    <TabContextProvider activeTab={activeTab}>
       <Layout>
         <SEO title={title} description={desc} />
         {showFrequentBanner ? (
@@ -172,7 +170,7 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
           <Container>
             <Columns>
               <Columns.Column size={12}>
-                <Downloader activeTab={activeTab} />
+                <Downloader />
               </Columns.Column>
 
               <Columns.Column size={6} className="is-3">
@@ -290,6 +288,6 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
           </Container>
         </Section>
       </Layout>
-    </>
+    </TabContextProvider>
   )
 }

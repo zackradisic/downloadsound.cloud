@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast'
-import { DownloadTypes } from '../components/downloader'
 import gtag from './gtag'
+import { DownloadTypes } from '../types/downloadTypes'
 
 const share = (activeTab: DownloadTypes, text: string) => {
   gtag('event', 'share', {
