@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet'
 import { useStaticQuery, graphql } from 'gatsby'
 import DownloadSoundCloudImg from '../images/downloadsound.cloud-og.png'
 
-function SEO ({ description, lang, meta, title }) {
+function SEO({ description, lang, meta, title }) {
   const { site } = useStaticQuery(
     graphql`
       query {

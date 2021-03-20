@@ -20,6 +20,7 @@ import './style.css'
 import useTheme from '../hooks/theme'
 import { getActiveUserData, isActive } from '../lib/active-user'
 import FrequentUserBanner from '../components/FrequentUserBanner'
+import FAQ from '../components/faq'
 
 export interface DownloadState {
   initialText: string
@@ -253,32 +254,37 @@ export const DownloadPage = ({ activeTab }: DownloadPageProps) => {
                         fontSize: '24px',
                         fontWeight: 600
                       }}>
-                      Playlist Manager
+                      Join our Discord
                     </h1>
 
                     <p className="is-size-6" style={{ marginTop: '1rem' }}>
-                      Tired of tracks being mysteriously removed from your big
-                      playlist?
+                      Want to hang out and talk? Or do you need help with
+                      something? We&apos;re trying to build a community of music
+                      lovers!
                     </p>
 
                     <p className="is-size-6" style={{ marginTop: '1rem' }}>
+                      Hop on our{' '}
                       <a
                         onClick={(
                           e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
                         ) => {
                           e.preventDefault()
                           window.location.replace(
-                            'https://app.downloadsound.cloud'
+                            'https://discord.com/invite/39bEkYuzrN'
                           )
                         }}
                         href="https://app.downloadsound.cloud">
-                        Try our playlist manager
-                      </a>
-                      , which helps you keep track of and managage a big
-                      playlist with 100+ tracks.
+                        Discord
+                      </a>{' '}
+                      server and chat with us!
                     </p>
                   </div>
                 )}
+              </Columns.Column>
+
+              <Columns.Column size={12}>
+                <FAQ activeTab={activeTab} />
               </Columns.Column>
             </Columns>
           </Container>
