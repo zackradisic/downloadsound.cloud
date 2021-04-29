@@ -14,21 +14,18 @@ interface DownloadedTrack {
 export const downloadFile = async (link: string, filename: string) => {
   if (typeof window !== 'undefined') {
     if (!link.includes('.m3u8')) {
-      fetch(link)
-        .then((resp) => resp.blob())
-        .then((blob) => {
-          const URL = window.URL || window.webkitURL
-          const url = URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.style.display = 'none'
-          a.href = url
-          // the filename you want
-          a.download = filename + '.mp3'
-          document.body.appendChild(a)
-          a.click()
-          window.URL.revokeObjectURL(url)
-        })
-        .catch((err) => console.log(err))
+      const resp = await fetch(link)
+      const blob = await resp.blob()
+      const URL = window.URL || window.webkitURL
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = url
+      // the filename you want
+      a.download = filename + '.mp3'
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
     } else {
       try {
         const output = await downloadM3U8(link)
