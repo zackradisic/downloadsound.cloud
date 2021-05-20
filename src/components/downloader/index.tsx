@@ -67,7 +67,7 @@ const DownloaderTabs = ({ activeTab }: DownloaderTabsProps) => {
             flexDirection: 'row',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            overflowX: 'scroll',
+            overflowX: 'hidden',
 
             letterSpacing: '0.3rem'
           }}>
