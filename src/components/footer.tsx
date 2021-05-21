@@ -26,6 +26,15 @@ const _Footer = () => {
                 Made with ❤️ by{' '}
                 <Link to="https://twitter.com/zackinsomnia">@zackinsomnia</Link>
               </Columns.Column>
+              <Columns.Column>
+                <a href="https://www.buymeacoffee.com/zackinsomnia">
+                  <img
+                    src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+                    alt="Buy Me A Coffee"
+                    style={{ height: '60px', width: '217px' }}
+                  />
+                </a>
+              </Columns.Column>
             </Columns>
           </Container>
         </Footer>

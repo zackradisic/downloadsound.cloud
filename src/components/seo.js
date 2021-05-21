@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet'
 import { useStaticQuery, graphql } from 'gatsby'
 import DownloadSoundCloudImg from '../images/downloadsound.cloud-og.png'
 
+// eslint-disable-next-line prettier/prettier
 function SEO ({ description, lang, meta, title }) {
   const { site } = useStaticQuery(
     graphql`
@@ -97,7 +98,20 @@ function SEO ({ description, lang, meta, title }) {
           property: 'og:image',
           content: DownloadSoundCloudImg
         }
-      ].concat(meta)}></Helmet>
+      ].concat(meta)}>
+      <script
+        type="text/javascript"
+        src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+        data-name="bmc-button"
+        data-slug="zackinsomnia"
+        data-color="#FFDD00"
+        data-emoji=""
+        data-font="Cookie"
+        data-text="Buy me a coffee"
+        data-outline-color="#000000"
+        data-font-color="#000000"
+        data-coffee-color="#ffffff"></script>
+    </Helmet>
   )
 }
 
