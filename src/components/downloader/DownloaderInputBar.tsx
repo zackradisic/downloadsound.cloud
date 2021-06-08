@@ -113,11 +113,15 @@ const DownloaderInputBar = ({
   }, [activeTab])
 
   const submitWrapper = async () => {
-    gtag('event', 'download_click', {
-      event_category: 'Downloader Click',
-      event_label: `${activeTab} click`,
-      value: text
-    })
+    try {
+      gtag('event', 'download_click', {
+        event_category: 'Downloader Click',
+        event_label: `${activeTab} click`,
+        value: text
+      })
+    } catch (err) {
+      console.log(err)
+    }
     if (!hasMedia) submit(text)
   }
   return (
