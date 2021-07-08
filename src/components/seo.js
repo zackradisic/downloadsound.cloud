@@ -44,12 +44,17 @@ function SEO ({ description, lang, meta, title }) {
     const skimlink = document.createElement('script')
     skimlink.type = 'text/javascript'
     skimlink.src = 'https://s.skimresources.com/js/186745X1657275.skimlinks.js'
+    const adsense = document.createElement('script')
+    adsense.setAttribute('data-ad-client', 'ca-pub-9784217227745416')
+    adsense.src =
+      'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+    adsense.async = true
     document.head.appendChild(tawkto)
     document.body.appendChild(skimlink)
+    document.body.appendChild(adsense)
   }, [])
 
   const metaDescription = description || site.siteMetadata.description
-  const defaultTitle = site.siteMetadata?.title
 
   return (
     <Helmet
