@@ -1,0 +1,16 @@
+{
+  "name": "id3",
+  "collaborators": [
+    "Zack Radisic <56137411+zackradisic@users.noreply.github.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "id3_bg.wasm",
+    "id3.js",
+    "id3_bg.js",
+    "id3.d.ts"
+  ],
+  "module": "id3.js",
+  "types": "id3.d.ts",
+  "sideEffects": false
+}
