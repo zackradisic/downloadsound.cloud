@@ -5,20 +5,50 @@ import { PlaylistTrack } from '../api'
 import _Promise from 'bluebird'
 import { Parser } from 'm3u8-parser'
 import React from 'react'
-
 interface DownloadedTrack {
   blob: Blob
   fileName: string
 }
 
-export const downloadFile = async (link: string, filename: string) => {
+type ID3Tag = any
+
+const fetchWasm = async (): Promise<ID3Tag> => {
+  if (typeof window !== 'undefined') {
+    const { getWasm } = require('./getWasm')
+    const wasm = await getWasm()
+    const id3 = wasm.ID3Tag.new()
+    return id3
+  }
+}
+const generateId3Tag = async (
+  id3: ID3Tag,
+  title: string,
+  author: string,
+  imageUrl: string
+) => {
+  const response = await fetch(imageUrl)
+  const imageData = await response.arrayBuffer()
+  return id3.create_tag(new Uint8Array(imageData), title, author)
+}
+
+export const downloadFile = async (
+  link: string,
+  filename: string,
+  author: string,
+  imageURL: string
+) => {
   if (typeof window !== 'undefined') {
     if (!link.includes('.m3u8')) {
       const resp = await fetch(link)
-      const blob = await resp.blob()
+
+      const songBuff = await resp.arrayBuffer()
+      const id3 = await fetchWasm()
+      const tag = await generateId3Tag(id3, filename, author, imageURL)
+
       const URL = window.URL || window.webkitURL
-      const url = URL.createObjectURL(blob)
+      const url = URL.createObjectURL(new Blob([tag, new Uint8Array(songBuff)]))
       const a = document.createElement('a')
+
       a.style.display = 'none'
       a.href = url
       // the filename you want
@@ -76,28 +106,35 @@ const downloadM3U8 = async (link: string) => {
   return new Blob(buffers)
 }
 
-const downloadByGroup = (
+const downloadByGroup = async (
   setProgress: React.Dispatch<React.SetStateAction<number>> | undefined,
   concurrency = 10,
   ...tracks: PlaylistTrack[]
 ) => {
+  const id3 = await fetchWasm()
   let count = 0
   return _Promise.map(
     tracks,
     async (track: PlaylistTrack) => {
+      const tag = await generateId3Tag(
+        id3,
+        track.title,
+        track.author,
+        track.imageURL
+      )
       if (track.hls) {
         const blob = await downloadM3U8(track.url)
-        console.log(setProgress)
         count++
         if (setProgress) {
           setProgress(count / tracks.length)
         }
         return {
-          blob,
+          blob: new Blob([tag, blob]),
           fileName: `${track.title}.mp3`
         }
       }
       const t = await downloadPlaylistTrack(track)
+      t.blob = new Blob([tag, t.blob])
       count++
       setProgress(count / tracks.length)
       return t

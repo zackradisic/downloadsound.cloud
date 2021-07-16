@@ -121,7 +121,7 @@ const Downloader = () => {
           const dlFunc = async () => {
             try {
               setDownloading(true)
-              await downloadFile(url, title)
+              await downloadFile(url, title, author.username, imageURL)
             } catch (err) {
               console.log(err)
               setErr('Failed to download, try refreshing the page.')
@@ -155,7 +155,7 @@ const Downloader = () => {
           author,
           copyrightedTracks,
           imageURL
-        } as Playlist)
+        })
         const dlFunc = async () => {
           const setProgressWrapper = (prog: number) => {
             console.log(prog)

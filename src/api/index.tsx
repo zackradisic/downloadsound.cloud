@@ -17,6 +17,7 @@ export interface PlaylistTrack {
   url: string
   hls: true
   author: string
+  imageURL: string
 }
 
 export interface Playlist extends SoundcloudResource {
